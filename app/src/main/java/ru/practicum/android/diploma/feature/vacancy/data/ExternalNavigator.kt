@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.vacancy.data
+package ru.practicum.android.diploma.feature.vacancy.data
 
 interface ExternalNavigator {
     fun share(link: String)

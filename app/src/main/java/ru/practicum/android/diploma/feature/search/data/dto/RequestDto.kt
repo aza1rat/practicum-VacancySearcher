@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.dto
+package ru.practicum.android.diploma.feature.search.data.dto
 
 sealed interface RequestDto {
     interface WithParams {
