@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.databinding.ActivityRootBinding
 import ru.practicum.android.diploma.util.getNavController
 
 class RootActivity : AppCompatActivity() {
+    @Suppress("LateinitUsage")
     private lateinit var binding: ActivityRootBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,8 +24,8 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigationView.isVisible =
                 destination.id == R.id.searchFragment ||
-                    destination.id == R.id.favoriteFragment ||
-                    destination.id == R.id.teamFragment
+                destination.id == R.id.favoriteFragment ||
+                destination.id == R.id.teamFragment
         }
 
         // Пример использования access token для HeadHunter API
@@ -34,5 +35,4 @@ class RootActivity : AppCompatActivity() {
     private fun networkRequestExample(accessToken: String) {
         // ...
     }
-
 }

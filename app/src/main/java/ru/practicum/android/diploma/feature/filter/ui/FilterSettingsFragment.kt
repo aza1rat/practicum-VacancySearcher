@@ -9,14 +9,15 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterSettingsBinding
 
-
 class FilterSettingsFragment : Fragment() {
 
     private var _binging: FragmentFilterSettingsBinding? = null
     private val binding get() = _binging!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binging = FragmentFilterSettingsBinding.inflate(inflater, container, false)
         return binding.root
@@ -30,5 +31,10 @@ class FilterSettingsFragment : Fragment() {
         binding.testNavigationButton2.setOnClickListener {
             findNavController().navigate(R.id.action_filterSettingsFragment_to_filterIndustryFragment)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binging = null
     }
 }

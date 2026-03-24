@@ -9,14 +9,15 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterLocationBinding
 
-
 class FilterLocationFragment : Fragment() {
 
     private var _binding: FragmentFilterLocationBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilterLocationBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,5 +33,8 @@ class FilterLocationFragment : Fragment() {
         }
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
