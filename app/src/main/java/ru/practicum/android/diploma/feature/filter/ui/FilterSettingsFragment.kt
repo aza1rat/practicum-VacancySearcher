@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import ru.practicum.android.diploma.databinding.FragmentFilterMainBinding
+import ru.practicum.android.diploma.databinding.FragmentFilterSettingsBinding
 
 
-class FilterMainFragment : Fragment() {
+class FilterSettingsFragment : Fragment() {
 
-    private var _binging: FragmentFilterMainBinding? = null
+    private var _binging: FragmentFilterSettingsBinding? = null
     private val binding get() = _binging!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binging = FragmentFilterMainBinding.inflate(inflater, container, false)
+        _binging = FragmentFilterSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
