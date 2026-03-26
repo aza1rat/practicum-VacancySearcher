@@ -1,10 +1,13 @@
 package ru.practicum.android.diploma.di
 
+import androidx.room.Room
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
+import ru.practicum.android.diploma.db.data.AppDatabase
 import ru.practicum.android.diploma.feature.search.domain.api.VacancyApiService
 import ru.practicum.android.diploma.util.AuthInterceptor
 
@@ -19,5 +22,13 @@ val dataModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VacancyApiService::class.java)
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
+    }
+
+    single {
+        (get() as AppDatabase).getVacancyDao()
     }
 }

@@ -4,9 +4,13 @@ import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.feature.search.domain.model.Vacancy
 
 interface FavoriteInteractor {
-    fun addToFavorites(vacancy: Vacancy)
-    fun removeFromFavorites(vacancyId: String)
-    fun getFromFavoritesById(vacancyId: String): Vacancy?
-    fun isFavorite(vacancyId: String): Boolean
-    fun getFavorites(offset: Int): Flow<List<Vacancy>>
+    suspend fun addToFavorites(vacancy: Vacancy)
+
+    suspend fun removeFromFavorites(vacancyId: String)
+
+    suspend fun getFromFavoritesById(vacancyId: String): Vacancy?
+
+    suspend fun isFavorite(vacancyId: String): Boolean
+
+    suspend fun getFavorites(offset: Int, limit: Int): Flow<List<Vacancy>>
 }
