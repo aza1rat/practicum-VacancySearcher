@@ -67,15 +67,19 @@
         android:id="@+id/placeholderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="46dp"
         android:fontFamily="@font/ys_display_medium"
-        android:textSize="@dimen/text_size_22"
-        android:textColor="?attr/colorOnBackgroundPrimary"
+        android:maxLines="2"
+        android:text="@string/failed_to_load_vacancies"
+
         android:textAlignment="center"
-        android:text="@string/empty_list"
-        app:layout_constraintTop_toBottomOf="@id/placeholderImage"
+        android:textColor="?attr/colorOnBackgroundPrimary"
+        android:textSize="@dimen/text_size_22"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
