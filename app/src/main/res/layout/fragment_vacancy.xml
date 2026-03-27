@@ -293,6 +293,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/vacancy_not_found"
             android:src="@drawable/img_job_unavailable" />
 
@@ -312,6 +313,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/server_error"
             android:src="@drawable/img_server_error_cat" />
 
@@ -331,6 +333,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/no_internet"
             android:src="@drawable/img_no_internet_connection" />
 
