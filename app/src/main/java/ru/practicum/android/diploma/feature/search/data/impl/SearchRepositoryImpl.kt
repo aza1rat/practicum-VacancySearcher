@@ -43,8 +43,6 @@ class SearchRepositoryImpl(
 
     companion object {
         private const val NO_INTERNET_CODE = -1
-        private const val BAD_REQUEST_CODE = 400
         private const val SUCCESS_CODE = 200
-        private const val SERVER_ERROR_CODE = 500
     }
 }

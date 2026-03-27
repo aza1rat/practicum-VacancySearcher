@@ -9,5 +9,5 @@ fun VacancyDto.toDomain() = Vacancy(
     salary = salary,
     address = address,
     employer = employer,
-    url = url
+    posterUrl = url
 )

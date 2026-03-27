@@ -10,5 +10,5 @@ data class Vacancy(
     val salary: SalaryDto? = null,
     val address: AddressDto? = null,
     val employer: EmployerDto? = null,
-    val url: String? = null
+    val posterUrl: String? = null
 )
