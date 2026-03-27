@@ -6,8 +6,8 @@ import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.dto.RequestDto
 import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
 import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDetailResponse
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyRepository
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyRepositoryImpl(
@@ -19,7 +19,7 @@ class VacancyRepositoryImpl(
         val response = networkClient.doRequest(RequestDto.WithPathId(id))
         when (response.code) {
             SUCCESS_CODE -> {
-                val data = (response as VacancyDetailResponse)
+                val data = response as VacancyDetailResponse
                 emit(Resource.Success(vacancyDetailMapper.map(data)))
             }
 

@@ -1,12 +1,18 @@
 package ru.practicum.android.diploma.di
 
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
+import ru.practicum.android.diploma.feature.search.data.NetworkClient
+import ru.practicum.android.diploma.feature.search.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.feature.search.data.network.VacancyApiService
+import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
+import ru.practicum.android.diploma.feature.vacancy.data.navigator.ExternalNavigatorImpl
 import ru.practicum.android.diploma.util.AuthInterceptor
+import ru.practicum.android.diploma.util.ConnectionChecker
 
 const val VACANCY_BASE_URL = "https://android-diploma.education-services.ru/"
 
@@ -25,5 +31,11 @@ val dataModule = module {
         RetrofitNetworkClient(get(), get())
     }
 
-    single<ConnectionChecker> { ConnectionChecker(androidContext()) }
+    single<ConnectionChecker> {
+        ConnectionChecker(androidContext())
+    }
+
+    single<ExternalNavigator> {
+        ExternalNavigatorImpl(androidContext())
+    }
 }
