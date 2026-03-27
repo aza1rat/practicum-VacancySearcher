@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.feature.vacancy.data.impl
 
 
 import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDetailResponse
-import ru.practicum.android.diploma.feature.vacancy.data.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 
 class VacancyDetailMapper() {
     fun map(vacancyDetailResponse: VacancyDetailResponse): VacancyDetail {

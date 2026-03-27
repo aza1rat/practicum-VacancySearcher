@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.feature.vacancy.data.model
+package ru.practicum.android.diploma.feature.vacancy.domain.model
 
 import ru.practicum.android.diploma.feature.search.data.dto.AddressDto
 import ru.practicum.android.diploma.feature.search.data.dto.AreaDto
