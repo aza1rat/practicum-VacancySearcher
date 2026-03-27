@@ -32,7 +32,7 @@ class RetrofitNetworkClient(
         return try {
             val response = when (dto) {
                 is RequestDto.WithParams -> vacancyApiService.searchVacancies(dto.params)
-                is RequestDto.WithPathId -> Response() // заглушка для эпика 2
+                is RequestDto.WithPathId -> TODO()
             }
             response.apply { code = SUCCESS_CODE }
         } catch (e: retrofit2.HttpException) {

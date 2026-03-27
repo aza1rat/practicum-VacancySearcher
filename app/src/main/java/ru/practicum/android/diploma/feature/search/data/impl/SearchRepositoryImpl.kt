@@ -28,7 +28,7 @@ class SearchRepositoryImpl(
             if (it.isOnlyWithSalary) filters["only_with_salary"] = "true"
         }
 
-        val response = networkClient.doRequest(RequestDto.SearchWithParams(filters))
+        val response = networkClient.doRequest(RequestDto.FilteredVacancies(filters))
 
         when (response.code) {
             SUCCESS_CODE -> {

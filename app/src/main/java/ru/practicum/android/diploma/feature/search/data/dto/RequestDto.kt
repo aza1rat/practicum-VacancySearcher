@@ -2,19 +2,19 @@ package ru.practicum.android.diploma.feature.search.data.dto
 
 sealed interface RequestDto {
 
-    interface WithParams : RequestDto {
+    interface WithParams {
         val params: Map<String, String>
     }
-    interface WithPathId : RequestDto {
+    interface WithPathId {
         val id: String
     }
 
-    data class SearchWithParams(
+    data class FilteredVacancies(
         override val params: Map<String, String>
-    ) : WithParams
+    ) : RequestDto, WithParams
 
-    data class SearchWithPathId(
+    data class Vacancy(
         override val id: String
-    ) : WithPathId
+    ) : RequestDto, WithPathId
 
 }
