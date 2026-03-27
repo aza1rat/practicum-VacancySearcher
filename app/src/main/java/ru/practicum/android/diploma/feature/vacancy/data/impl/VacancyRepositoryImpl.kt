@@ -16,7 +16,7 @@ class VacancyRepositoryImpl(
     private val externalNavigator: ExternalNavigator
 ) : VacancyRepository {
     override fun getVacancyDetail(id: String): Flow<Resource<VacancyDetail?>> = flow {
-        val response = networkClient.doRequest(RequestDto.WithPathId(id))
+        val response = networkClient.doRequest(RequestDto.Vacancy(id))
         when (response.code) {
             SUCCESS_CODE -> {
                 val data = response as VacancyDetailResponse
