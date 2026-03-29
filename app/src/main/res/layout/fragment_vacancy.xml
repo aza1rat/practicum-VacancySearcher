@@ -127,7 +127,7 @@
                     android:background="@null"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_placeholder"
-                    app:shapeAppearance="@style/RoundedShapeAppearance" />
+                    app:shapeAppearance="@style/roundedImageView" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/employer_name"
