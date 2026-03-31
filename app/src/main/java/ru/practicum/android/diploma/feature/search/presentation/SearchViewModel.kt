@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.feature.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.feature.search.domain.model.VacancyListInfo
 import ru.practicum.android.diploma.feature.search.presentation.model.PagingErrorEvent
 import ru.practicum.android.diploma.feature.search.presentation.model.SearchState
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.SingleLiveEvent
 import ru.practicum.android.diploma.util.debounce
@@ -28,7 +28,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private var lastRequestedPage = -1
     private var maxPage = -1
     private var itemPositionInvokingSearch = -1
-    private val vacancies = mutableListOf<VacancyDetail>()
+    private val vacancies = mutableListOf<Vacancy>()
     private val searchDebounce = debounce<String>(DEBOUNCE_DELAY, viewModelScope, true) { query ->
         if (query.isNotEmpty() && query.isNotBlank()) {
             resetPage()
@@ -121,7 +121,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         return searchInteractor.searchVacancies(query, null, currentPage)
     }
 
-    private fun onNextPage(newMaxPage: Int, newVacancies: List<VacancyDetail>, newCurrentPage: Int = currentPage + 1) {
+    private fun onNextPage(newMaxPage: Int, newVacancies: List<Vacancy>, newCurrentPage: Int = currentPage + 1) {
         currentPage = newCurrentPage
         maxPage = newMaxPage
         vacancies.addAll(newVacancies)

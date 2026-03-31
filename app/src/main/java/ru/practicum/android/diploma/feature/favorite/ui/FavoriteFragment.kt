@@ -15,7 +15,7 @@ import ru.practicum.android.diploma.databinding.FragmentFavoriteBinding
 import ru.practicum.android.diploma.feature.favorite.domain.FavoritesState
 import ru.practicum.android.diploma.feature.favorite.presentation.FavoriteFragmentViewModel
 import ru.practicum.android.diploma.feature.search.ui.VacanciesAdapter
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.FavoriteRecyclerScrollListener
 import ru.practicum.android.diploma.util.debounce
 
@@ -26,7 +26,7 @@ class FavoriteFragment : Fragment() {
     private val viewModel: FavoriteFragmentViewModel by viewModel()
 
     @Suppress("LateinitUsage")
-    private lateinit var itemClickDebounce: (VacancyDetail) -> Unit
+    private lateinit var itemClickDebounce: (Vacancy) -> Unit
     @Suppress("LateinitUsage")
     private lateinit var adapter: VacanciesAdapter
     @Suppress("LateinitUsage")
@@ -54,7 +54,7 @@ class FavoriteFragment : Fragment() {
         }
 
         itemClickDebounce =
-            debounce<VacancyDetail>(ITEM_CLICK_DEBOUNCE, viewLifecycleOwner.lifecycleScope, false) { vacancy ->
+            debounce<Vacancy>(ITEM_CLICK_DEBOUNCE, viewLifecycleOwner.lifecycleScope, false) { vacancy ->
                 onItemClick()
             }
         adapter = VacanciesAdapter { vacancy -> itemClickDebounce(vacancy) }

@@ -12,11 +12,11 @@ import ru.practicum.android.diploma.feature.vacancy.domain.model.Industry
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Phone
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Salary
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Schedule
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 
 class VacancyDetailMapper {
-    fun map(response: VacancyDto): VacancyDetail {
-        return VacancyDetail(
+    fun map(response: VacancyDto): Vacancy {
+        return Vacancy(
             id = response.id,
             name = response.name,
             salary = response.salary?.let { Salary(it.id, it.currency, it.from, it.to) },

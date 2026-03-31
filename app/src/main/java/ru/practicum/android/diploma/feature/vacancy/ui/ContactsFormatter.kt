@@ -9,7 +9,7 @@ import com.google.android.material.textview.MaterialTextView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Contacts
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
 import ru.practicum.android.diploma.feature.vacancy.ui.model.PhoneInfo
 import ru.practicum.android.diploma.util.fromDpToPx
@@ -20,7 +20,7 @@ class ContactsFormatter(
     private val context: Context
 ) {
 
-    fun setupContacts(vacancy: VacancyDetail) {
+    fun setupContacts(vacancy: Vacancy) {
         val contacts = vacancy.contacts
         val isContactsEmpty = contacts == null ||
             contacts.name.isNullOrEmpty() &&

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.favorite.domain.FavoritesState
 import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteInteractor
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.ResourceProvider
 import ru.practicum.android.diploma.util.SingleLiveEvent
 
@@ -29,7 +29,7 @@ class FavoriteFragmentViewModel(
     private var hasMore = true
     private var isLoading = false
 
-    private val _vacancies = mutableListOf<VacancyDetail>()
+    private val _vacancies = mutableListOf<Vacancy>()
 
     fun loadFirstPage() {
         currentPage = 0
