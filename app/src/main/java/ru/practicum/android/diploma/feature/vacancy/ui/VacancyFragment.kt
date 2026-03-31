@@ -1,25 +1,18 @@
 package ru.practicum.android.diploma.feature.vacancy.ui
 
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
-import ru.practicum.android.diploma.feature.vacancy.domain.model.Contacts
 import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyState
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
-import ru.practicum.android.diploma.feature.vacancy.ui.model.PhoneInfo
-import ru.practicum.android.diploma.util.fromDpToPx
 import ru.practicum.android.diploma.util.ui.DescriptionFormatterVacancy
 import ru.practicum.android.diploma.util.ui.SalaryFormatterVacancy
 
@@ -74,18 +67,6 @@ class VacancyFragment : Fragment() {
             is VacancyState.Content -> showContent(state)
             is VacancyState.Error -> showError(state)
             is VacancyState.Loading -> showLoading()
-            is VacancyState.Empty -> showEmpty(state)
-        }
-    }
-
-    private fun showEmpty(content: VacancyState.Empty) {
-        with(binding) {
-            progressBar.visibility = View.GONE
-            vacancyLayout.visibility = View.GONE
-            share.visibility = View.GONE
-            addToFavorites.visibility = View.GONE
-            placeHolderForEmpty.visibility = View.VISIBLE
-            emptyTv.setText(content.message)
         }
     }
 
@@ -93,7 +74,7 @@ class VacancyFragment : Fragment() {
         val vacancy = content.content
         contentVacancy = vacancy
         with(binding) {
-            placeHolderForEmpty.visibility = View.INVISIBLE
+            placeHolderForEmpty.visibility = View.GONE
             share.visibility = View.VISIBLE
             addToFavorites.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -103,7 +84,7 @@ class VacancyFragment : Fragment() {
 
             setupMainInfo(vacancy)
             setupSkills(vacancy.skills)
-            setupContacts(vacancy)
+            ContactsFormatter(binding, vacancyViewModel, requireContext()).setupContacts(vacancy)
         }
     }
 
@@ -137,128 +118,42 @@ class VacancyFragment : Fragment() {
         }
     }
 
-    private fun setupContacts(vacancy: VacancyDetail) {
-        val contacts = vacancy.contacts
-        val isContactsEmpty = contacts == null ||
-            contacts.name.isNullOrEmpty() &&
-            contacts.email.isNullOrEmpty() &&
-            contacts.phones?.isEmpty() == true
-
-        if (isContactsEmpty) {
-            binding.contactGroup.visibility = View.GONE
-        } else {
-            binding.contactGroup.visibility = View.VISIBLE
-            displayContactData(contacts)
-        }
-    }
-
-    private fun displayContactData(contacts: Contacts?) {
-        if (contacts == null) return
-
-        setupContactName(contacts.name)
-        setupContactEmail(contacts.email)
-
-        if (!contacts.phones.isNullOrEmpty()) {
-            val phoneInfos = contacts.phones.map {
-                PhoneInfo(it.comment, it.formatted ?: "")
-            }
-            onPhoneInfoReceived(phoneInfos)
-        }
-    }
-
-    private fun setupContactName(name: String?) {
-        binding.vacancyContactName.apply {
-            text = name
-            visibility = if (name.isNullOrEmpty()) View.GONE else View.VISIBLE
-        }
-    }
-
-    private fun setupContactEmail(email: String?) {
-        binding.vacancyContactEmail.apply {
-            text = email
-            visibility = if (email.isNullOrEmpty()) View.GONE else View.VISIBLE
-            setOnClickListener {
-                email?.let { vacancyViewModel.selectEmailClientAndSend(it) }
-            }
-        }
-    }
-
     private fun showError(error: VacancyState.Error) {
-        val isNoInternet = error.errorMessage == getString(R.string.no_internet)
         with(binding) {
-            placeHolderForEmpty.visibility = View.INVISIBLE
             progressBar.visibility = View.GONE
+            vacancyLayout.visibility = View.GONE
             share.visibility = View.GONE
             addToFavorites.visibility = View.GONE
-            vacancyLayout.visibility = View.GONE
-            noInternetPlaceHolder.visibility = if (isNoInternet) View.VISIBLE else View.GONE
-            serverError.visibility = if (isNoInternet) View.GONE else View.VISIBLE
+
+            noInternetPlaceHolder.visibility = View.GONE
+            serverError.visibility = View.GONE
+            placeHolderForEmpty.visibility = View.GONE
+
+            when (error.errorMessage) {
+                getString(R.string.no_internet) -> {
+                    noInternetPlaceHolder.visibility = View.VISIBLE
+                }
+
+                getString(R.string.vacancy_not_found) -> {
+                    placeHolderForEmpty.visibility = View.VISIBLE
+                }
+
+                else -> {
+                    serverError.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
     private fun showLoading() {
         with(binding) {
-            placeHolderForEmpty.visibility = View.INVISIBLE
+            placeHolderForEmpty.visibility = View.GONE
+            serverError.visibility = View.GONE
+            noInternetPlaceHolder.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             vacancyLayout.visibility = View.GONE
             share.visibility = View.GONE
             addToFavorites.visibility = View.GONE
         }
-    }
-
-    private fun onPhoneInfoReceived(phones: List<PhoneInfo>) {
-        if (phones.isNotEmpty()) {
-            var upperId = binding.vacancyContactEmail.id
-            for (phone in phones) {
-                if (phone.comment != null) {
-                    upperId = initPhoneView(
-                        MaterialTextView(getPhoneCommentContextThemeWrapper()),
-                        upperId,
-                        phone.comment
-                    )
-                }
-                val phoneTextView = MaterialTextView(getPhoneContextThemeWrapper())
-                phoneTextView.setOnClickListener { vacancyViewModel.showCallAppsAndDial(phone.phone) }
-                upperId = initPhoneView(phoneTextView, upperId, phone.phone)
-            }
-        }
-    }
-
-    private fun initPhoneView(view: TextView, upperId: Int, text: String): Int {
-        val generatedId = View.generateViewId()
-        view.apply {
-            id = generatedId
-            this.text = text
-            layoutParams = getPhoneLayoutParams(upperId)
-        }
-        binding.vacancyLayout.addView(view)
-        return generatedId
-    }
-
-    private fun getPhoneLayoutParams(upperId: Int): ConstraintLayout.LayoutParams =
-        ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            topToBottom = upperId
-            topMargin = PHONE_VIEW_TOP_MARGIN.fromDpToPx(requireActivity())
-            startToEnd = binding.start16Line.id
-            endToStart = binding.end16Line.id
-            horizontalBias = HORIZONTAL_BIAS
-        }
-
-    private fun getPhoneContextThemeWrapper() = ContextThemeWrapper(
-        requireContext(),
-        R.style.VacancyContactHighlightTextViewStyle
-    )
-
-    private fun getPhoneCommentContextThemeWrapper() = ContextThemeWrapper(
-        requireContext(),
-        R.style.VacancyDetailsSingleTextViewStyle
-    )
-
-    companion object {
-        private const val PHONE_VIEW_TOP_MARGIN = 8
-        private const val HORIZONTAL_BIAS = 0f
     }
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.util.Resource
 
@@ -20,13 +19,7 @@ class VacancyViewModel(private val vacancyInteractor: VacancyInteractor) : ViewM
             vacancyInteractor.getVacancyDetail(id).collect {
                 when (it) {
                     is Resource.Error -> _vacancyDetail.postValue(VacancyState.Error(it.message!!))
-                    is Resource.Success -> {
-                        if (it.data != null) {
-                            _vacancyDetail.postValue(VacancyState.Content(it.data))
-                        } else {
-                            _vacancyDetail.postValue(VacancyState.Empty(R.string.vacancy_not_found))
-                        }
-                    }
+                    is Resource.Success -> _vacancyDetail.postValue(VacancyState.Content(it.data!!))
                 }
             }
         }

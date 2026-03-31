@@ -22,8 +22,9 @@ class VacancyRepositoryImpl(
                 val data = response as VacancyDetailResponse
                 emit(Resource.Success(vacancyDetailMapper.map(data)))
             }
-
             NO_INTERNET_CODE -> emit(Resource.Error("Нет интернета"))
+            PAGE_NOT_FOUND -> emit(Resource.Error("Вакансия не найдена или\nудалена"))
+
             else -> emit(Resource.Error("Ошибка сервера"))
         }
     }
@@ -43,5 +44,7 @@ class VacancyRepositoryImpl(
     companion object {
         private const val NO_INTERNET_CODE = -1
         private const val SUCCESS_CODE = 200
+
+        private const val PAGE_NOT_FOUND = 400
     }
 }
