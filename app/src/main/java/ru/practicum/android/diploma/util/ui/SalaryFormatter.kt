@@ -12,7 +12,7 @@ class SalaryFormatter(private val salary: Salary?, private val context: Context)
     }
     fun format(): String {
         val messageSalaryNull = context.getString(R.string.salary_null)
-        if (salary == null) return messageSalaryNull
+        if (salary == null || salary.from == null && salary.to == null) return messageSalaryNull
         val from = salary.from?.digitFormat()
         val to = salary.to?.digitFormat()
         var messageResult = ""
