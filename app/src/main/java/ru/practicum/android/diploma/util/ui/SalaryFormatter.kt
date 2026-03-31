@@ -20,8 +20,8 @@ class SalaryFormatter(private val salary: Salary?, private val context: Context)
             messageResult =
                 context.getString(R.string.salary_from_to, from, to) + currency
         }
-        if (from != null) messageResult = context.getString(R.string.salary_from, from) + currency
-        if (to != null) messageResult = context.getString(R.string.salary_to, to) + currency
+        if (from != null && to == null) messageResult = context.getString(R.string.salary_from, from) + currency
+        if (to != null && from == null) messageResult = context.getString(R.string.salary_to, to) + currency
         return messageResult
     }
 
