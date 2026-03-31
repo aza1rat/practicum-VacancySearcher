@@ -42,7 +42,7 @@ class SearchRepositoryImpl(
                 emit(Resource.Success(result))
             }
 
-            NO_INTERNET_CODE -> emit(Resource.Error(resourceProvider.getString(R.string.no_internet)))
+            NO_INTERNET_CODE -> emit(Resource.Error(NO_INTERNET_CODE.toString()))
             else -> emit(Resource.Error(resourceProvider.getString(R.string.server_error)))
         }
     }

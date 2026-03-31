@@ -7,8 +7,8 @@ sealed interface SearchState {
     object InputStarted : SearchState
     object Loading : SearchState
     data class Result(val vacancies: List<VacancyDetail>, val founded: Int) : SearchState
-    data class NetworkError(val message: String) : SearchState
+    data class NetworkError(val message: Int) : SearchState
     object EmptyResultError : SearchState
-    data class RequestError(val message: String) : SearchState
+    data class RequestError(val message: Int) : SearchState
     object LoadingMore : SearchState
 }

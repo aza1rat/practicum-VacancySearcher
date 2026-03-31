@@ -14,7 +14,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.SearchViewModel
+import ru.practicum.android.diploma.feature.search.presentation.model.PagingErrorEvent
 import ru.practicum.android.diploma.feature.search.presentation.model.SearchState
+import ru.practicum.android.diploma.util.getNavController
 
 class SearchFragment : Fragment() {
 
@@ -35,9 +37,16 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
         val adapter = VacanciesAdapter { vacancy ->
-            Toast.makeText(requireContext(), vacancy.name, Toast.LENGTH_SHORT).show()
+            val action = SearchFragmentDirections.actionSearchFragmentToVacancyFragment(vacancy.id)
+            requireActivity().getNavController(R.id.containerView).navigate(action)
         }
         binding.searchResultsRecyclerView.adapter = adapter
+        searchViewModel.observeErrorPagingEvent().observe(viewLifecycleOwner) { error ->
+            when(error) {
+                is PagingErrorEvent.NetworkError -> Toast.makeText(requireContext(), context?.getString(error.message), Toast.LENGTH_SHORT).show()
+                is PagingErrorEvent.RequestError -> Toast.makeText(requireContext(), context?.getString(error.message), Toast.LENGTH_SHORT).show()
+            }
+        }
         searchViewModel.observeSearchState().observe(viewLifecycleOwner) { state ->
             toggleVisibilityWithoutGroup(state)
             toggleVisibilityPlaceholder(state)
@@ -61,11 +70,11 @@ class SearchFragment : Fragment() {
                 }
                 is SearchState.NetworkError -> {
                     binding.placeholderImage.setImageResource(R.drawable.img_no_internet_connection)
-                    binding.placeholderText.text = state.message
+                    binding.placeholderText.text = context?.getString(state.message)
                 }
                 is SearchState.RequestError -> {
                     binding.placeholderImage.setImageResource(R.drawable.img_server_error_entity)
-                    binding.placeholderText.text = state.message
+                    binding.placeholderText.text = context?.getString(state.message)
                 }
                 SearchState.Loading, SearchState.LoadingMore -> {}
             }

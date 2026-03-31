@@ -6,16 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.feature.search.domain.model.VacancyListInfo
+import ru.practicum.android.diploma.feature.search.presentation.model.PagingErrorEvent
 import ru.practicum.android.diploma.feature.search.presentation.model.SearchState
 import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.SingleLiveEvent
 import ru.practicum.android.diploma.util.debounce
 
 class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
     private val searchState = MutableLiveData<SearchState>()
     fun observeSearchState(): LiveData<SearchState> = searchState
+    private val errorPagingEvent = SingleLiveEvent<PagingErrorEvent>()
+    fun observeErrorPagingEvent(): LiveData<PagingErrorEvent> = errorPagingEvent
 
     private var searchText = ""
     private var listVisible = false
@@ -26,9 +31,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private val vacancies = mutableListOf<VacancyDetail>()
     private val searchDebounce = debounce<String>(DEBOUNCE_DELAY, viewModelScope, true) { query ->
         if (query.isNotEmpty() && query.isNotBlank()) {
-            currentPage = 1
-            itemPositionInvokingSearch = -1
-            maxPage = -1
+            resetPage()
             firstPageRequest(query)
         }
     }
@@ -55,7 +58,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
                     doRequest(searchText).collect { vacancyList ->
                         when (vacancyList) {
                             is Resource.Error<VacancyListInfo> -> {
-                                TODO()
+                                errorCodeResolve(vacancyList.message!!, {
+                                    errorPagingEvent.value = PagingErrorEvent.NetworkError(R.string.no_internet)
+                                }, {
+                                    errorPagingEvent.value = PagingErrorEvent.RequestError(R.string.server_error)
+                                })
                             }
                             is Resource.Success<VacancyListInfo> -> {
                                 val data = vacancyList.data!!
@@ -85,9 +92,24 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
                         }
                     }
                     is Resource.Error -> {
+                        errorCodeResolve(vacancyList.message!!, {
+                            searchState.value = SearchState.NetworkError(R.string.no_internet)
+                        }, {
+                            searchState.value = SearchState.RequestError(R.string.server_error)
+                        })
                     }
                 }
             }
+        }
+    }
+
+    private fun errorCodeResolve(message: String, networkError: ()->Unit, requestError: ()->Unit) {
+        val errorCode = message.toIntOrNull()
+        errorCode?.apply {
+            if (this == -1)
+                networkError()
+        } ?: {
+            requestError()
         }
     }
 
@@ -101,6 +123,13 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         vacancies.addAll(newVacancies)
         itemPositionInvokingSearch = vacancies.size - 1
         listVisible = true
+    }
+
+    private fun resetPage() {
+        currentPage = 1
+        itemPositionInvokingSearch = -1
+        maxPage = -1
+        lastRequestedPage = -1
     }
 
     companion object {
