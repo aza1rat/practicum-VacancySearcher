@@ -114,6 +114,8 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -194,7 +196,7 @@
 
     <TextView
         android:id="@+id/vacanciesCountText"
-        android:layout_width="159dp"
+        android:layout_width="wrap_content"
         android:layout_height="27dp"
         android:layout_marginTop="3dp"
         android:background="@drawable/bg_rounded_text"
@@ -203,6 +205,8 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
         android:visibility="invisible"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchContainer" />
