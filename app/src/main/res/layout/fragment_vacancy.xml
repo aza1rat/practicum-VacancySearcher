@@ -64,7 +64,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vacancy_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_8">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/start_16_line"
@@ -125,7 +126,6 @@
                     android:layout_width="@dimen/company_logotype_size"
                     android:layout_height="@dimen/company_logotype_size"
                     android:background="@null"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_placeholder"
                     app:shapeAppearance="@style/roundedImageView" />
 
@@ -285,6 +285,7 @@
     </ScrollView>
 
     <FrameLayout
+        android:id="@+id/placeHolderForEmpty"
         style="@style/VacancyErrorFrameLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -298,6 +299,7 @@
             android:src="@drawable/img_job_unavailable" />
 
         <TextView
+            android:id="@+id/emptyTv"
             style="@style/VacancyErrorTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -305,6 +307,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/serverError"
         style="@style/VacancyErrorFrameLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -325,6 +328,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/noInternetPlaceHolder"
         style="@style/VacancyErrorFrameLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -345,6 +349,7 @@
     </FrameLayout>
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="@dimen/progress_bar_size"
         android:layout_height="@dimen/progress_bar_size"
         android:layout_gravity="center"
