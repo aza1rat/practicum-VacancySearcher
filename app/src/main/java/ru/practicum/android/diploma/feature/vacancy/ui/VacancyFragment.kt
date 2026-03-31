@@ -1,23 +1,31 @@
 package ru.practicum.android.diploma.feature.vacancy.ui
 
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.google.android.material.textview.MaterialTextView
+import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
-import ru.practicum.android.diploma.feature.vacancy.ui.model.PhoneInfo
-import ru.practicum.android.diploma.util.fromDpToPx
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyState
+import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
+import ru.practicum.android.diploma.util.ui.DescriptionFormatterVacancy
+import ru.practicum.android.diploma.util.ui.SalaryFormatterVacancy
 
 class VacancyFragment : Fragment() {
 
+    private val vacancyViewModel by viewModel<VacancyViewModel>()
+
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
+
+    private var contentVacancy: VacancyDetail? = null
+
+    private val args by navArgs<VacancyFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +38,23 @@ class VacancyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onPhoneInfoReceived(
-            listOf(
-                PhoneInfo("Комментарий", "89123456789"),
-                PhoneInfo(null, "89123456789")
-            )
-        )
+
+        binding.back.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
+        // можно потестить захардкодить разные id
+        val id = args.vacancyId
+        vacancyViewModel.getVacancyDetail(id)
+        vacancyViewModel.observeVacancyDetail().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        binding.share.setOnClickListener {
+            contentVacancy?.url?.let { url ->
+                vacancyViewModel.sendVacancyViaMessenger(url)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -43,70 +62,98 @@ class VacancyFragment : Fragment() {
         _binding = null
     }
 
-    /**
-     * @param phones список телефонов с номерами и возможными комментариями
-     * upperId - id верхнего View, после которого будет добавлен новый View
-     * */
-    private fun onPhoneInfoReceived(phones: List<PhoneInfo>) {
-        if (phones.isNotEmpty()) {
-            var upperId = binding.vacancyContactEmail.id
-            for (phone in phones) {
-                if (phone.comment != null) {
-                    upperId = initPhoneView(
-                        MaterialTextView(getPhoneCommentContextThemeWrapper()), upperId, phone.comment
-                    )
+    private fun render(state: VacancyState) {
+        when (state) {
+            is VacancyState.Content -> showContent(state)
+            is VacancyState.Error -> showError(state)
+            is VacancyState.Loading -> showLoading()
+        }
+    }
+
+    private fun showContent(content: VacancyState.Content) {
+        val vacancy = content.content
+        contentVacancy = vacancy
+        with(binding) {
+            placeHolderForEmpty.visibility = View.GONE
+            share.visibility = View.VISIBLE
+            addToFavorites.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+            vacancyLayout.visibility = View.VISIBLE
+            serverError.visibility = View.GONE
+            noInternetPlaceHolder.visibility = View.GONE
+
+            setupMainInfo(vacancy)
+            setupSkills(vacancy.skills)
+            ContactsFormatter(binding, vacancyViewModel, requireContext()).setupContacts(vacancy)
+        }
+    }
+
+    private fun setupMainInfo(vacancy: VacancyDetail) {
+        with(binding) {
+            vacancyName.text = vacancy.name
+            vacancySalary.text = SalaryFormatterVacancy(vacancy.salary, requireContext()).format()
+
+            employerName.text = vacancy.employer?.name
+            regionCity.text = vacancy.address?.city ?: vacancy.area?.name
+
+            Glide.with(requireContext())
+                .load(vacancy.employer?.logo)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(employerLogo)
+
+            requiredExperience.text = vacancy.experience?.name
+            val scheduleText = "${vacancy.employment?.name}, ${vacancy.schedule?.name}"
+            employmentSchedule.text = scheduleText
+            // нужна функция форматирования текста?
+            vacancyDescription.text = DescriptionFormatterVacancy(vacancy.description).format()
+        }
+    }
+
+    private fun setupSkills(skills: List<String>?) {
+        if (skills.isNullOrEmpty()) {
+            binding.skillsGroup.visibility = View.GONE
+        } else {
+            binding.skillsGroup.visibility = View.VISIBLE
+            binding.vacancySkills.text = skills.joinToString("\n") { " • $it" }
+        }
+    }
+
+    private fun showError(error: VacancyState.Error) {
+        with(binding) {
+            progressBar.visibility = View.GONE
+            vacancyLayout.visibility = View.GONE
+            share.visibility = View.GONE
+            addToFavorites.visibility = View.GONE
+
+            noInternetPlaceHolder.visibility = View.GONE
+            serverError.visibility = View.GONE
+            placeHolderForEmpty.visibility = View.GONE
+
+            when (error.errorMessage) {
+                getString(R.string.no_internet) -> {
+                    noInternetPlaceHolder.visibility = View.VISIBLE
                 }
-                val phoneTextView = MaterialTextView(getPhoneContextThemeWrapper())
-                phoneTextView.setOnClickListener { /* нажатие на номер телефона */ }
-                upperId = initPhoneView(
-                    phoneTextView, upperId, phone.phone
-                )
+
+                getString(R.string.vacancy_not_found) -> {
+                    placeHolderForEmpty.visibility = View.VISIBLE
+                }
+
+                else -> {
+                    serverError.visibility = View.VISIBLE
+                }
             }
         }
     }
 
-    /**
-     * @param view View принимающая текст. Либо комментарий, либо номер телефона
-     * @param upperId текущий upperId
-     * @param text текст на View
-     * @return сгенерированный id для View
-     */
-    private fun initPhoneView(view: TextView, upperId: Int, text: String): Int {
-        val generatedId = View.generateViewId()
-        view.apply {
-            id = generatedId
-            this.text = text
-            layoutParams = getPhoneLayoutParams(upperId)
+    private fun showLoading() {
+        with(binding) {
+            placeHolderForEmpty.visibility = View.GONE
+            serverError.visibility = View.GONE
+            noInternetPlaceHolder.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            vacancyLayout.visibility = View.GONE
+            share.visibility = View.GONE
+            addToFavorites.visibility = View.GONE
         }
-        binding.vacancyLayout.addView(view)
-        return generatedId
-    }
-
-    /**
-     * @param upperId текущий upperId
-     * @return сгенерированный LayoutParams для View
-     * Новая View будет добавлена под View с upperId
-     */
-    private fun getPhoneLayoutParams(upperId: Int): ConstraintLayout.LayoutParams = ConstraintLayout.LayoutParams(
-        ConstraintLayout.LayoutParams.WRAP_CONTENT,
-        ConstraintLayout.LayoutParams.WRAP_CONTENT
-    ).apply {
-        topToBottom = upperId
-        topMargin = PHONE_VIEW_TOP_MARGIN.fromDpToPx(requireActivity())
-        startToEnd = binding.start16Line.id
-        endToStart = binding.end16Line.id
-        horizontalBias = HORIZONTAL_BIAS
-    }
-
-    private fun getPhoneContextThemeWrapper() = ContextThemeWrapper(
-        requireContext(),
-        R.style.VacancyContactHighlightTextViewStyle
-    )
-    private fun getPhoneCommentContextThemeWrapper() =
-        ContextThemeWrapper(requireContext(), R.style.VacancyDetailsSingleTextViewStyle)
-
-    companion object {
-        private const val PHONE_VIEW_TOP_MARGIN = 8
-        private const val HORIZONTAL_BIAS = 0f
     }
 }

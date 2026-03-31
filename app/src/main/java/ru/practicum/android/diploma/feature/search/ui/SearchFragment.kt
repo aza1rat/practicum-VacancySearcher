@@ -29,6 +29,12 @@ class SearchFragment : Fragment() {
         binding.navigateToVacancyButton.setOnClickListener {
             findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
         }*/
+
+        /*
+        передача аргумента в фрагмент
+        val action = SearchFragmentDirections.actionSearchFragmentToVacancyFragment(vacancyId = "12345")
+        findNavController().navigate(action)
+        */
     }
 
     override fun onDestroyView() {

@@ -21,7 +21,8 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_vacancyFragment"
-            app:destination="@id/vacancyFragment" />
+            app:destination="@id/vacancyFragment">
+            </action>
         <action
             android:id="@+id/action_searchFragment_to_filterSettingsFragment"
             app:destination="@id/filterSettingsFragment" />
@@ -35,7 +36,11 @@
         android:id="@+id/vacancyFragment"
         android:name="ru.practicum.android.diploma.feature.vacancy.ui.VacancyFragment"
         android:label="fragment_vacancy"
-        tools:layout="@layout/fragment_vacancy" />
+        tools:layout="@layout/fragment_vacancy">
+        <argument
+            android:name="vacancyId"
+            app:argType="string"/>
+    </fragment>
     <fragment
         android:id="@+id/filterSettingsFragment"
         android:name="ru.practicum.android.diploma.feature.filter.ui.FilterSettingsFragment"
