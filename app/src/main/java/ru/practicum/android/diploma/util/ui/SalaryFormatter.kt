@@ -8,21 +8,25 @@ import ru.practicum.android.diploma.util.digitFormat
 class SalaryFormatter(private val salary: Salary?, private val context: Context) {
     private val currency: String by lazy {
         val currencySymbol = currencyMap[salary?.currency] ?: -1
-        if (currencySymbol != -1) " " + context.getString(currencySymbol) else ""
+        " " + if (currencySymbol != -1) context.getString(currencySymbol) else salary!!.currency ?: ""
     }
 
     fun format(): String {
         val messageSalaryNull = context.getString(R.string.salary_null)
-        if (salary == null) return messageSalaryNull
+        if (salary == null || salary.from == null && salary.to == null) return messageSalaryNull
         val from = salary.from?.digitFormat()
         val to = salary.to?.digitFormat()
+        return getMessageResult(from, to)
+    }
+
+    private fun getMessageResult(from: String?, to: String?): String {
         var messageResult = ""
         if (from != null && to != null) {
             messageResult =
                 context.getString(R.string.salary_from_to, from, to) + currency
         }
-        if (from != null) messageResult = context.getString(R.string.salary_from, from) + currency
-        if (to != null) messageResult = context.getString(R.string.salary_to, to) + currency
+        if (from != null && to == null) messageResult = context.getString(R.string.salary_from, from) + currency
+        if (to != null && from == null) messageResult = context.getString(R.string.salary_to, to) + currency
         return messageResult
     }
 

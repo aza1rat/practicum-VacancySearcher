@@ -53,7 +53,7 @@ class VacancyViewHolder(private val binding: ItemVacancyBinding) : RecyclerView.
         val vacancyName = vacancy.name
         val city = vacancy.address?.city
         Glide.with(binding.posterImg.context)
-            .load(vacancy.url)
+            .load(vacancy.employer?.logo)
             .placeholder(R.drawable.ic_placeholder)
             .centerCrop()
             .into(binding.posterImg)
