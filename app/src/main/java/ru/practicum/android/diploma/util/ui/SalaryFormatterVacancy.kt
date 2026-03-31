@@ -2,10 +2,10 @@ package ru.practicum.android.diploma.util.ui
 
 import android.content.Context
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.feature.search.domain.model.Salary
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Salary
 import ru.practicum.android.diploma.util.digitFormat
 
-class SalaryFormatter(private val salary: Salary?, private val context: Context) {
+class SalaryFormatterVacancy(private val salary: Salary?, private val context: Context) {
     private val currency: String by lazy {
         val currencySymbol = currencyMap[salary?.currency] ?: -1
         if (currencySymbol != -1) " " + context.getString(currencySymbol) else ""

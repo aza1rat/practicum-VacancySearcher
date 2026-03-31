@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.util.Resource
 
@@ -20,29 +21,32 @@ class VacancyViewModel(private val vacancyInteractor: VacancyInteractor) : ViewM
                 when (it) {
                     is Resource.Error -> _vacancyDetail.postValue(VacancyState.Error(it.message!!))
                     is Resource.Success -> {
-                        if (it.data)
-                        _vacancyDetail.postValue(VacancyState.Content(it.data!!))
+                        if (it.data != null) {
+                            _vacancyDetail.postValue(VacancyState.Content(it.data))
+                        } else {
+                            _vacancyDetail.postValue(VacancyState.Empty(R.string.vacancy_not_found))
+                        }
                     }
                 }
             }
         }
     }
 
-    fun sendVacancyViaMessenger(url: String){
+    fun sendVacancyViaMessenger(url: String) {
         viewModelScope.launch {
             vacancyInteractor.sendVacancyViaMessenger(url)
         }
     }
-    fun selectEmailClientAndSend(email: String){
+
+    fun selectEmailClientAndSend(email: String) {
         viewModelScope.launch {
             vacancyInteractor.selectEmailClientAndSend(email)
         }
     }
-    fun showCallAppsAndDial(phoneNumber: String){
+
+    fun showCallAppsAndDial(phoneNumber: String) {
         viewModelScope.launch {
             vacancyInteractor.showCallAppsAndDial(phoneNumber)
         }
     }
-
-
 }
