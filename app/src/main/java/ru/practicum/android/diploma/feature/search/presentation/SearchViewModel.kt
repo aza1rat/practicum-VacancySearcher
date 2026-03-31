@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.query
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.feature.search.domain.api.SearchInteractor
+import ru.practicum.android.diploma.feature.search.domain.model.VacancyListInfo
 import ru.practicum.android.diploma.feature.search.presentation.model.SearchState
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.debounce
 
@@ -18,11 +20,17 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private var searchText = ""
     private var listVisible = false
     private var currentPage = 1
+    private var lastRequestedPage = -1
     private var maxPage = -1
+    private var itemPositionInvokingSearch = -1
+    private val vacancies = mutableListOf<VacancyDetail>()
     private val searchDebounce = debounce<String>(DEBOUNCE_DELAY, viewModelScope, true) { query ->
-        if (query.isNotEmpty() && query.isNotBlank())
-            doRequest(query)
-
+        if (query.isNotEmpty() && query.isNotBlank()) {
+            currentPage = 1
+            itemPositionInvokingSearch = -1
+            maxPage = -1
+            firstPageRequest(query)
+        }
     }
 
     fun onSearchTextChanged(text: String) {
@@ -32,32 +40,67 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
             searchState.value = SearchState.Idle
             listVisible = false
         }
-        if (text.isNotEmpty() && !listVisible)
+        if (text.isNotEmpty() && !listVisible) {
             searchState.value = SearchState.InputStarted
+        }
         searchDebounce.invoke(text)
     }
 
-    private fun doRequest(query: String) {
-        searchState.value = SearchState.Loading
-        viewModelScope.launch {
-            searchInteractor.searchVacancies(query,null,currentPage).collect { vacancyList ->
-                when(vacancyList) {
-                    is Resource.Success -> {
-                        val data = vacancyList.data!!
-                        if (data.vacancies.isEmpty()) {
-                            searchState.value = SearchState.EmptyResultError
-                        } else {
-                            searchState.value = SearchState.Result(data.vacancies, data.found)
-                            maxPage = vacancyList.data.pages
-                            listVisible = true
+    fun onListScroll(lastVisibleItemPosition: Int) {
+        if (itemPositionInvokingSearch != -1 && itemPositionInvokingSearch <= lastVisibleItemPosition && currentPage < maxPage) {
+            searchState.value = SearchState.LoadingMore
+            if (currentPage != lastRequestedPage) {
+                lastRequestedPage = currentPage
+                viewModelScope.launch {
+                    doRequest(searchText).collect { vacancyList ->
+                        when (vacancyList) {
+                            is Resource.Error<VacancyListInfo> -> {
+                                TODO()
+                            }
+                            is Resource.Success<VacancyListInfo> -> {
+                                val data = vacancyList.data!!
+                                onNextPage(data.pages, data.vacancies)
+                                searchState.value = SearchState.Result(vacancies, data.found)
+                            }
                         }
-                    }
-                    is Resource.Error -> {
-
                     }
                 }
             }
         }
+    }
+
+    private fun firstPageRequest(query: String) {
+        searchState.value = SearchState.Loading
+        viewModelScope.launch {
+            doRequest(query).collect { vacancyList ->
+                when (vacancyList) {
+                    is Resource.Success -> {
+                        vacancies.clear()
+                        val data = vacancyList.data!!
+                        if (data.vacancies.isEmpty()) {
+                            searchState.value = SearchState.EmptyResultError
+                        } else {
+                            onNextPage(data.pages, data.vacancies, 2)
+                            searchState.value = SearchState.Result(vacancies, data.found)
+                        }
+                    }
+                    is Resource.Error -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private fun doRequest(query: String): Flow<Resource<VacancyListInfo>> {
+        return searchInteractor.searchVacancies(query, null, currentPage)
+    }
+
+    private fun onNextPage(newMaxPage: Int, newVacancies: List<VacancyDetail>, newCurrentPage: Int = currentPage + 1) {
+        currentPage = newCurrentPage
+        maxPage = newMaxPage
+        vacancies.addAll(newVacancies)
+        itemPositionInvokingSearch = vacancies.size - 1
+        listVisible = true
     }
 
     companion object {

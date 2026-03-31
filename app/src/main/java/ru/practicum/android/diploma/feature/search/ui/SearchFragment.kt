@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -31,43 +33,41 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchInput.doOnTextChanged { text, _, _, _ ->
-            searchViewModel.onSearchTextChanged(text.toString())
-        }
-        binding.searchClearIcon.setOnClickListener {
-            binding.searchInput.text.clear()
-        }
+        setupListeners()
         val adapter = VacanciesAdapter { vacancy ->
             Toast.makeText(requireContext(), vacancy.name, Toast.LENGTH_SHORT).show()
         }
         binding.searchResultsRecyclerView.adapter = adapter
         searchViewModel.observeSearchState().observe(viewLifecycleOwner) { state ->
-            if (state != SearchState.Loading)
-                binding.mainSearchProgressBar.isVisible = false
-            if (state !is SearchState.Result || state != SearchState.EmptyResultError)
-                binding.vacanciesCountText.isVisible = false
-
+            toggleVisibilityWithoutGroup(state)
+            toggleVisibilityPlaceholder(state)
             when (state) {
                 is SearchState.Result -> {
-                    binding.searchResultsRecyclerView.isVisible = true
                     adapter.submitList(state.vacancies)
-                    binding.vacanciesCountText.isVisible = true
                     binding.vacanciesCountText.text = context?.getString(R.string.vacancies_n_found, state.founded)
                 }
-                SearchState.EmptyResultError -> TODO()
+                SearchState.EmptyResultError -> {
+                    binding.placeholderImage.setImageResource(R.drawable.img_request_unsuccessful_cat)
+                    binding.placeholderText.text = context?.getString(R.string.failed_to_load_vacancies)
+                    binding.vacanciesCountText.text = context?.getString(R.string.no_vacancies_found)
+                }
                 SearchState.Idle -> {
-                    binding.placeholderImage.isVisible = true
                     binding.placeholderImage.setImageResource(R.drawable.img_search_holder)
+                    binding.placeholderImage.isVisible = true
                     binding.searchClearIcon.setImageResource(R.drawable.ic_search)
                 }
                 SearchState.InputStarted -> {
-                    binding.placeholderImage.isVisible = false
                     binding.searchClearIcon.setImageResource(R.drawable.ic_close)
                 }
-                SearchState.Loading -> binding.mainSearchProgressBar.isVisible = true
-                SearchState.LoadingMore -> TODO()
-                is SearchState.NetworkError -> TODO()
-                is SearchState.RequestError -> TODO()
+                is SearchState.NetworkError -> {
+                    binding.placeholderImage.setImageResource(R.drawable.img_no_internet_connection)
+                    binding.placeholderText.text = state.message
+                }
+                is SearchState.RequestError -> {
+                    binding.placeholderImage.setImageResource(R.drawable.img_server_error_entity)
+                    binding.placeholderText.text = state.message
+                }
+                SearchState.Loading, SearchState.LoadingMore -> {}
             }
 
         }
@@ -78,4 +78,39 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
+    private fun toggleVisibilityWithoutGroup(state: SearchState) {
+        binding.mainSearchProgressBar.isVisible = state == SearchState.Loading
+        binding.paginationProgressBarLayout.isVisible = state == SearchState.LoadingMore
+        binding.vacanciesCountText.isVisible = state is SearchState.Result || state == SearchState.EmptyResultError
+        binding.searchResultsRecyclerView.isVisible = state is SearchState.Result || state == SearchState.LoadingMore
+    }
+
+    private fun toggleVisibilityPlaceholder(state: SearchState) {
+        if (state is SearchState.NetworkError || state is SearchState.RequestError || state == SearchState.EmptyResultError) {
+            binding.placeholderImage.isVisible = true
+            binding.placeholderText.isVisible = true
+        } else {
+            binding.placeholderImage.isVisible = false
+            binding.placeholderText.isVisible = false
+        }
+    }
+
+    private fun setupListeners() {
+        binding.searchInput.doOnTextChanged { text, _, _, _ ->
+            searchViewModel.onSearchTextChanged(text.toString())
+        }
+        binding.searchClearIcon.setOnClickListener {
+            binding.searchInput.text.clear()
+        }
+        binding.searchResultsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    searchViewModel.onListScroll(
+                        (binding.searchResultsRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    )
+                }
+            }
+        })
+    }
 }

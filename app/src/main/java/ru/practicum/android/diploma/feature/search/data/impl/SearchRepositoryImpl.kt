@@ -1,14 +1,13 @@
 package ru.practicum.android.diploma.feature.search.data.impl
 
-import ru.practicum.android.diploma.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.SearchFilters
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.dto.RequestDto
 import ru.practicum.android.diploma.feature.search.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
-import ru.practicum.android.diploma.feature.search.domain.model.Vacancy
 import ru.practicum.android.diploma.feature.search.domain.model.VacancyListInfo
 import ru.practicum.android.diploma.feature.vacancy.data.impl.VacancyDetailMapper
 import ru.practicum.android.diploma.util.Resource
