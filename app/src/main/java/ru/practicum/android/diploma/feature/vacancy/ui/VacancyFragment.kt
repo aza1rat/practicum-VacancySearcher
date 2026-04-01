@@ -46,14 +46,24 @@ class VacancyFragment : Fragment() {
         // можно потестить захардкодить разные id
         val id = args.vacancyId
         vacancyViewModel.getVacancyDetail(id)
+        vacancyViewModel.checkFavoriteState(id)
+
         vacancyViewModel.observeVacancyDetail().observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        vacancyViewModel.observeFavoriteState().observe(viewLifecycleOwner) {
+            setIsFavorite(it)
         }
 
         binding.share.setOnClickListener {
             contentVacancy?.url?.let { url ->
                 vacancyViewModel.sendVacancyViaMessenger(url)
             }
+        }
+
+        binding.addToFavorites.setOnClickListener {
+            vacancyViewModel.handleFavorites(contentVacancy!!)
         }
     }
 
@@ -81,7 +91,6 @@ class VacancyFragment : Fragment() {
             vacancyLayout.visibility = View.VISIBLE
             serverError.visibility = View.GONE
             noInternetPlaceHolder.visibility = View.GONE
-
             setupMainInfo(vacancy)
             setupSkills(vacancy.skills)
             ContactsFormatter(binding, vacancyViewModel, requireContext()).setupContacts(vacancy)
@@ -154,6 +163,14 @@ class VacancyFragment : Fragment() {
             vacancyLayout.visibility = View.GONE
             share.visibility = View.GONE
             addToFavorites.visibility = View.GONE
+        }
+    }
+
+    private fun setIsFavorite(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.addToFavorites.setImageResource(R.drawable.ic_favorites_on)
+        } else {
+            binding.addToFavorites.setImageResource(R.drawable.ic_favorites_off)
         }
     }
 }
