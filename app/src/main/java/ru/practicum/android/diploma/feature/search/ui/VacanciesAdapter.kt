@@ -7,19 +7,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.ui.SalaryFormatter
 
 class VacanciesAdapter(
-    private val onItemClick: (VacancyDetail) -> Unit
+    private val onItemClick: (Vacancy) -> Unit
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
 
-    private var vacancies = listOf<VacancyDetail>()
+    private var vacancies = listOf<Vacancy>()
 
     /**
      * Используем метод submitList при изменении данных из UI потока
      */
-    fun submitList(newList: List<VacancyDetail>) {
+    fun submitList(newList: List<Vacancy>) {
         val diff = DiffUtil.calculateDiff(VacancyDiffCallback(vacancies, newList))
         vacancies = newList
         diff.dispatchUpdatesTo(this)
@@ -49,7 +49,7 @@ class VacanciesAdapter(
 
 class VacancyViewHolder(private val binding: ItemVacancyBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(vacancy: VacancyDetail, salaryMessage: String) {
+    fun bind(vacancy: Vacancy, salaryMessage: String) {
         val vacancyName = vacancy.name
         val city = vacancy.address?.city
         Glide.with(binding.posterImg.context)
@@ -67,7 +67,7 @@ class VacancyViewHolder(private val binding: ItemVacancyBinding) : RecyclerView.
     }
 }
 
-class VacancyDiffCallback(private val oldList: List<VacancyDetail>, private val newList: List<VacancyDetail>) :
+class VacancyDiffCallback(private val oldList: List<Vacancy>, private val newList: List<Vacancy>) :
     DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size

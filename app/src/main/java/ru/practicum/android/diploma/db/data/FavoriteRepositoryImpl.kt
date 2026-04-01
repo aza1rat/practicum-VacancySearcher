@@ -4,12 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.db.data.dao.VacancyDao
 import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteRepository
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.toDbEntity
 import ru.practicum.android.diploma.util.toVacancyDetail
 
 class FavoriteRepositoryImpl(private val vacancyDao: VacancyDao) : FavoriteRepository {
-    override suspend fun addToFavorite(vacancy: VacancyDetail) {
+    override suspend fun addToFavorite(vacancy: Vacancy) {
         vacancyDao.insert(vacancy.toDbEntity())
     }
 
@@ -17,11 +17,11 @@ class FavoriteRepositoryImpl(private val vacancyDao: VacancyDao) : FavoriteRepos
         vacancyDao.remove(id)
     }
 
-    override fun getFavorites(offset: Int, limit: Int): Flow<List<VacancyDetail>> =
+    override fun getFavorites(offset: Int, limit: Int): Flow<List<Vacancy>> =
         vacancyDao.getAllByPage(offset, limit)
             .map { list -> list.map { it.toVacancyDetail() } }
 
-    override suspend fun getVacancyById(id: String): VacancyDetail {
+    override suspend fun getVacancyById(id: String): Vacancy {
         return vacancyDao.getById(id).toVacancyDetail()
     }
 

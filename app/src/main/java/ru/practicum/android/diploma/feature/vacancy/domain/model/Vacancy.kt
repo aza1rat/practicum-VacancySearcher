@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.feature.vacancy.domain.model
 
 import kotlinx.serialization.Serializable
 
-data class VacancyDetail(
+data class Vacancy(
     val id: String,
     val name: String,
     val salary: Salary? = null,
