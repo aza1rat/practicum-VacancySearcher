@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyState
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
 import ru.practicum.android.diploma.util.ui.DescriptionFormatterVacancy
@@ -23,7 +23,7 @@ class VacancyFragment : Fragment() {
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
 
-    private var contentVacancy: VacancyDetail? = null
+    private var contentVacancy: Vacancy? = null
 
     private val args by navArgs<VacancyFragmentArgs>()
 
@@ -88,7 +88,7 @@ class VacancyFragment : Fragment() {
         }
     }
 
-    private fun setupMainInfo(vacancy: VacancyDetail) {
+    private fun setupMainInfo(vacancy: Vacancy) {
         with(binding) {
             vacancyName.text = vacancy.name
             vacancySalary.text = SalaryFormatterVacancy(vacancy.salary, requireContext()).format()

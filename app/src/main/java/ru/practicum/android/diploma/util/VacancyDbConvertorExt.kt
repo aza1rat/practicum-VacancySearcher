@@ -1,9 +1,9 @@
 package ru.practicum.android.diploma.util
 
 import ru.practicum.android.diploma.db.data.entity.VacancyEntity
-import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyDetail
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 
-fun VacancyDetail.toDbEntity(): VacancyEntity {
+fun Vacancy.toDbEntity(): VacancyEntity {
     return VacancyEntity(
         id,
         name,
@@ -22,8 +22,8 @@ fun VacancyDetail.toDbEntity(): VacancyEntity {
     )
 }
 
-fun VacancyEntity.toVacancyDetail(): VacancyDetail {
-    return VacancyDetail(
+fun VacancyEntity.toVacancyDetail(): Vacancy {
+    return Vacancy(
         id,
         name,
         salary,
