@@ -5,13 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteInteractor
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.Resource
 
-class VacancyViewModel(private val vacancyInteractor: VacancyInteractor) : ViewModel() {
+class VacancyViewModel(
+    private val vacancyInteractor: VacancyInteractor,
+    private val favoriteInteractor: FavoriteInteractor
+) : ViewModel() {
 
     private val _vacancyDetail = MutableLiveData<VacancyState>()
     fun observeVacancyDetail(): LiveData<VacancyState> = _vacancyDetail
+
+    private val favoriteStateLiveData = MutableLiveData<Boolean>()
+    fun observeFavoriteState(): LiveData<Boolean> = favoriteStateLiveData
 
     fun getVacancyDetail(id: String) {
         viewModelScope.launch {
@@ -40,6 +48,24 @@ class VacancyViewModel(private val vacancyInteractor: VacancyInteractor) : ViewM
     fun showCallAppsAndDial(phoneNumber: String) {
         viewModelScope.launch {
             vacancyInteractor.showCallAppsAndDial(phoneNumber)
+        }
+    }
+
+    fun checkFavoriteState(id: String) {
+        viewModelScope.launch {
+            favoriteStateLiveData.postValue(favoriteInteractor.isFavorite(id))
+        }
+    }
+
+    fun handleFavorites(vacancy: Vacancy) {
+        viewModelScope.launch {
+            if (favoriteStateLiveData.value != null && !favoriteStateLiveData.value!!) {
+                favoriteInteractor.addToFavorites(vacancy)
+                favoriteStateLiveData.postValue(true)
+            } else {
+                favoriteInteractor.removeFromFavorites(vacancy.id)
+                favoriteStateLiveData.postValue(false)
+            }
         }
     }
 }

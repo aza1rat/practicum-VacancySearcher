@@ -25,7 +25,7 @@ val dataModule = module {
     single<VacancyApiService> {
         Retrofit.Builder()
             .baseUrl(VACANCY_BASE_URL)
-            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor(BuildConfig.API_ACCESS_TOKEN)).build())
+            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmFjdGljdW0ucnUiLCJhdWQiOiJwcmFjdGljdW0ucnUiLCJ1c2VybmFtZSI6InNmZGYifQ.7vjvP0wubaKJppwNlw14JOStvkTSUtpoKB0ysY8BzHw")).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VacancyApiService::class.java)

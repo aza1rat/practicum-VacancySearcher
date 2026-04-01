@@ -15,6 +15,6 @@ val viewModelModule = module {
         FavoriteFragmentViewModel(get(), get())
     }
     viewModel {
-        VacancyViewModel(get())
+        VacancyViewModel(get(), get())
     }
 }
