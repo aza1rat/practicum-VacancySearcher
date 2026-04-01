@@ -52,6 +52,7 @@ class SearchFragment : Fragment() {
 
     private fun observeEvents() {
         searchViewModel.observeErrorPagingEvent().observe(viewLifecycleOwner) { error ->
+            binding.paginationProgressBarLayout.isVisible = false
             when (error) {
                 is PagingErrorEvent.NetworkError -> Toast.makeText(
                     requireContext(),
