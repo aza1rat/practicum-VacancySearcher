@@ -101,7 +101,7 @@ class VacancyFragment : Fragment() {
     private fun setupMainInfo(vacancy: Vacancy) {
         with(binding) {
             vacancyName.text = vacancy.name
-            vacancySalary.text = SalaryFormatter(vacancy.salary,requireContext()).format()
+            vacancySalary.text = SalaryFormatter(vacancy.salary, requireContext()).format()
 
             employerName.text = vacancy.employer?.name
             regionCity.text = vacancy.address?.raw ?: vacancy.area?.name
