@@ -8,11 +8,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.db.data.AppDatabase
+import ru.practicum.android.diploma.feature.filter.data.IndustryNetworkClient
+import ru.practicum.android.diploma.feature.filter.data.network.IndustryApiService
+import ru.practicum.android.diploma.feature.filter.data.network.IndustryNetworkClientImpl
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.feature.search.data.network.VacancyApiService
 import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
 import ru.practicum.android.diploma.feature.vacancy.data.navigator.ExternalNavigatorImpl
+import ru.practicum.android.diploma.feature.vacancy.domain.model.Industry
 import ru.practicum.android.diploma.util.AuthInterceptor
 import ru.practicum.android.diploma.util.ConnectionChecker
 import ru.practicum.android.diploma.util.ResourceProvider
@@ -25,7 +29,7 @@ val dataModule = module {
     single<VacancyApiService> {
         Retrofit.Builder()
             .baseUrl(VACANCY_BASE_URL)
-            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor(BuildConfig.API_ACCESS_TOKEN)).build())
+            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmFjdGljdW0ucnUiLCJhdWQiOiJwcmFjdGljdW0ucnUiLCJ1c2VybmFtZSI6Impvc2VwaCJ9.tZ_U8LvKG7vY1RGVOvIX0moiS8Mei7enDrmNL4JUZ5I")).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VacancyApiService::class.java)
@@ -33,6 +37,19 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(get(), get())
+    }
+
+    single<IndustryApiService> {
+        Retrofit.Builder()
+            .baseUrl(VACANCY_BASE_URL)
+            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmFjdGljdW0ucnUiLCJhdWQiOiJwcmFjdGljdW0ucnUiLCJ1c2VybmFtZSI6Impvc2VwaCJ9.tZ_U8LvKG7vY1RGVOvIX0moiS8Mei7enDrmNL4JUZ5I")).build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(IndustryApiService::class.java)
+    }
+
+    single<IndustryNetworkClient> {
+        IndustryNetworkClientImpl(get(), get())
     }
 
     single<ConnectionChecker> {
