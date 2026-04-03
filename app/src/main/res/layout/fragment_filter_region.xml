@@ -28,6 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="@dimen/padding_8"
+                app:tint="?attr/colorOnBackgroundPrimary"
                 android:src="@drawable/ic_back"/>
 
             <TextView
@@ -135,7 +136,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/img_request_unsuccessful_cat"
         app:layout_constraintTop_toBottomOf="@id/searchContainer"
         app:layout_constraintBottom_toTopOf="@id/placeholderText"
         app:layout_constraintStart_toStartOf="parent"

@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_8"
         android:contentDescription="@string/search_vacancies"
+        app:tint="?attr/colorOnBackgroundPrimary"
         android:src="@drawable/ic_back" />
 
     <ImageButton
