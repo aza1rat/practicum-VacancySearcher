@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.feature.filter.domain.api.IndustryInteractor
 import ru.practicum.android.diploma.feature.filter.presentation.state.IndustryScreenState
-import ru.practicum.android.diploma.feature.filter.ui.IndustryUiModel
 import ru.practicum.android.diploma.feature.filter.ui.toUiModel
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Industry
 
@@ -40,9 +39,9 @@ class IndustryViewModel(
         }
     }
 
-    fun saveSelectIndustry() {
-        // TODO: save to sharepref 
-    }
+    /*fun saveSelectIndustry() {
+
+    }*/
 
     fun selectIndustry(id: String) {
         val currentState = _industryScreenState.value ?: IndustryScreenState()

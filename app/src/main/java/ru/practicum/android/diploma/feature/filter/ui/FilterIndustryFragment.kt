@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,11 +80,11 @@ class FilterIndustryFragment : Fragment() {
             binding.searchInput.text?.clear()
         }
         binding.backButton.setOnClickListener {
-            industryViewModel.saveSelectIndustry()
+            //industryViewModel.saveSelectIndustry()
             findNavController().popBackStack()
         }
         binding.selectButton.setOnClickListener {
-            industryViewModel.saveSelectIndustry()
+            //industryViewModel.saveSelectIndustry()
             findNavController().popBackStack()
         }
     }
