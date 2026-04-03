@@ -10,11 +10,11 @@ import ru.practicum.android.diploma.feature.vacancy.domain.model.Industry
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.ResourceProvider
 
-class IndustryRepositoryImpl(private val client: IndustryNetworkClient,
-                             private val resourceProvider: ResourceProvider
-): IndustryRepository {
+class IndustryRepositoryImpl(
+    private val client: IndustryNetworkClient,
+    private val resourceProvider: ResourceProvider
+) : IndustryRepository {
     override fun searchIndustry(): Flow<Resource<List<Industry>>> = flow {
-
         val response = client.getIndustries()
 
         when (response.code) {

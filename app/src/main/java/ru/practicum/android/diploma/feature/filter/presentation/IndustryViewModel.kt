@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.feature.filter.ui.IndustryUiModel
 import ru.practicum.android.diploma.feature.filter.ui.toUiModel
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Industry
 
-class IndustryViewModel(private val industryInteractor: IndustryInteractor): ViewModel() {
+class IndustryViewModel(private val industryInteractor: IndustryInteractor) : ViewModel() {
 
     private val _industryScreenState = MutableLiveData<IndustryScreenState>()
     val industryScreenState: LiveData<IndustryScreenState> = _industryScreenState

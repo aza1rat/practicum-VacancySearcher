@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemIndustryBinding
 
-class IndustryAdapter (private var industries: List<IndustryUiModel>,
-                       private val onSelect: (String?) -> Unit) : RecyclerView.Adapter<IndustryViewHolder> () {
+class IndustryAdapter(
+    private var industries: List<IndustryUiModel>,
+    private val onSelect: (String?) -> Unit
+) : RecyclerView.Adapter<IndustryViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndustryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,7 +34,7 @@ class IndustryAdapter (private var industries: List<IndustryUiModel>,
 
 }
 
-class IndustryViewHolder (
+class IndustryViewHolder(
     val binding: ItemIndustryBinding,
     private val onSelect: (String?) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -40,8 +42,12 @@ class IndustryViewHolder (
     fun bind(industry: IndustryUiModel) {
         binding.industryName.text = industry.name
         binding.industrySelect.setImageResource(
-            if (industry.isSelected) R.drawable.ic_radio_button_on
-            else R.drawable.ic_radio_button_off
+            if (industry.isSelected) {
+                R.drawable.ic_radio_button_on
+            }
+            else {
+                R.drawable.ic_radio_button_off
+            }
         )
 
         itemView.setOnClickListener {
