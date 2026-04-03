@@ -29,7 +29,7 @@ val dataModule = module {
     single<VacancyApiService> {
         Retrofit.Builder()
             .baseUrl(VACANCY_BASE_URL)
-            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmFjdGljdW0ucnUiLCJhdWQiOiJwcmFjdGljdW0ucnUiLCJ1c2VybmFtZSI6Impvc2VwaCJ9.tZ_U8LvKG7vY1RGVOvIX0moiS8Mei7enDrmNL4JUZ5I")).build())
+            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor(BuildConfig.API_ACCESS_TOKEN)).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VacancyApiService::class.java)
@@ -42,7 +42,7 @@ val dataModule = module {
     single<IndustryApiService> {
         Retrofit.Builder()
             .baseUrl(VACANCY_BASE_URL)
-            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmFjdGljdW0ucnUiLCJhdWQiOiJwcmFjdGljdW0ucnUiLCJ1c2VybmFtZSI6Impvc2VwaCJ9.tZ_U8LvKG7vY1RGVOvIX0moiS8Mei7enDrmNL4JUZ5I")).build())
+            .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor(BuildConfig.API_ACCESS_TOKEN)).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(IndustryApiService::class.java)
