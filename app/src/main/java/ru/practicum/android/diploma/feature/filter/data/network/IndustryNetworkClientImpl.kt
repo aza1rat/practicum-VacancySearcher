@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.data.network
 
+import android.util.Log
 import okio.IOException
 import ru.practicum.android.diploma.feature.filter.data.IndustryNetworkClient
 import ru.practicum.android.diploma.feature.filter.data.dto.IndustryResponse
@@ -19,13 +20,16 @@ class IndustryNetworkClientImpl(
             val list = api.getIndustriesRaw()
             IndustryResponse(list).apply { code = SUCCESS_CODE }
         } catch (e: IOException) {
+            Log.e(TAG, "Network Error", e)
             IndustryResponse(emptyList()).apply { code = SERVER_ERROR_CODE }
         } catch (e: retrofit2.HttpException) {
+            Log.e(TAG, "HTTP Error", e)
             IndustryResponse(emptyList()).apply { code = e.code() }
         }
     }
 
     companion object {
+        private const val TAG = "IndustryNetworkClientImpl"
         private const val NO_INTERNET_CODE = -1
         private const val SUCCESS_CODE = 200
         private const val SERVER_ERROR_CODE = 500

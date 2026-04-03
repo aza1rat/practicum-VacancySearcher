@@ -44,8 +44,7 @@ class IndustryViewHolder(
         binding.industrySelect.setImageResource(
             if (industry.isSelected) {
                 R.drawable.ic_radio_button_on
-            }
-            else {
+            } else {
                 R.drawable.ic_radio_button_off
             }
         )
