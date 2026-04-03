@@ -59,6 +59,10 @@ class IndustryViewModel(
         )
     }
 
+    private fun showSelectedButton(industries: List<IndustryUiModel>): Boolean {
+        return industries.any { it.isSelected }
+    }
+
     fun onSearchTextChanged(text: String) {
         if (text.isEmpty()) {
             selectIndustry(isSelected, text)
@@ -74,7 +78,7 @@ class IndustryViewModel(
             IndustryScreenState(
                 errorMessage = null,
                 industries = filtered,
-                selectedButtonView = true
+                selectedButtonView = showSelectedButton(filtered)
             )
         )
     }
