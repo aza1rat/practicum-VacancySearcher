@@ -15,6 +15,8 @@ import ru.practicum.android.diploma.feature.filter.domain.api.regions.FilterRegi
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaCountry
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaRegion
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
+import ru.practicum.android.diploma.feature.filter.data.impl.IndustryRepositoryImpl
+import ru.practicum.android.diploma.feature.filter.domain.api.IndustryRepository
 import ru.practicum.android.diploma.feature.search.data.impl.SearchRepositoryImpl
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 import ru.practicum.android.diploma.feature.vacancy.data.impl.VacancyDetailMapper
@@ -39,6 +41,14 @@ val repositoryModule = module {
 
     single<FavoriteRepository> {
         FavoriteRepositoryImpl(get())
+    }
+
+    single<SearchRepository> {
+        SearchRepositoryImpl(get(), get())
+    }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(get(), get())
     }
 
     single<FiltersGettingRepository> {
