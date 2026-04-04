@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
 import androidx.room.Room
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -9,8 +11,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.db.data.AppDatabase
 import ru.practicum.android.diploma.feature.filter.data.IndustryNetworkClient
+import ru.practicum.android.diploma.feature.filter.data.StorageClient
 import ru.practicum.android.diploma.feature.filter.data.network.IndustryApiService
 import ru.practicum.android.diploma.feature.filter.data.network.IndustryNetworkClientImpl
+import ru.practicum.android.diploma.feature.filter.data.storage.SharedPrefsStorageClient
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.feature.search.data.network.VacancyApiService
@@ -32,6 +36,16 @@ val dataModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VacancyApiService::class.java)
+    }
+
+    single {
+        androidContext().getSharedPreferences("filter_prefs", Context.MODE_PRIVATE)
+    }
+
+    single { Gson() }
+
+    single<StorageClient<String>> {
+        SharedPrefsStorageClient(get())
     }
 
     single<NetworkClient> {
