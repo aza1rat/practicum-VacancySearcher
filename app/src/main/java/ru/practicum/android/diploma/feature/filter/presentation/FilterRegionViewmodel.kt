@@ -66,8 +66,4 @@ class FilterRegionViewmodel(private val filterRegionsInteractor: FilterRegionsIn
         }
 
     }
-
-    companion object {
-        private const val DEBOUNCE_DELAY = 2000L
-    }
 }
