@@ -5,8 +5,10 @@ import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteInteract
 import ru.practicum.android.diploma.feature.favorite.domain.impl.FavoriteInteractorImpl
 import ru.practicum.android.diploma.feature.filter.domain.api.FilterCountryInteractor
 import ru.practicum.android.diploma.feature.filter.domain.api.IndustryInteractor
+import ru.practicum.android.diploma.feature.filter.domain.api.IndustrySaveInteractor
 import ru.practicum.android.diploma.feature.filter.domain.impl.FilterCountryInteractorImpl
 import ru.practicum.android.diploma.feature.filter.domain.impl.IndustryInteractorImpl
+import ru.practicum.android.diploma.feature.filter.domain.impl.IndustrySaveInteractorImpl
 import ru.practicum.android.diploma.feature.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.feature.search.domain.impl.SearchInteractorImpl
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
@@ -27,6 +29,10 @@ val interactorModule = module {
 
     single<IndustryInteractor> {
         IndustryInteractorImpl(get())
+    }
+
+    single<IndustrySaveInteractor> {
+        IndustrySaveInteractorImpl(get())
     }
 
     single<FilterCountryInteractor> {
