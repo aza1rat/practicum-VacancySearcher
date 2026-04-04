@@ -81,7 +81,7 @@ class IndustryViewModel(
 
         val target = currentState.allIndustries.find { it.id == currentState.selectedIndustryId }
         if (target != null) {
-            saveIndustryInteractor.setIndustry(Industry(target.id,target.name))
+            saveIndustryInteractor.setIndustry(Industry(target.id, target.name))
         }
     }
 
