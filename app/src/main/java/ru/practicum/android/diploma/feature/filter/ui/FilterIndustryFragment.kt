@@ -79,9 +79,11 @@ class FilterIndustryFragment : Fragment() {
             binding.searchInput.text?.clear()
         }
         binding.backButton.setOnClickListener {
+            industryViewModel.saveIndustry()
             findNavController().popBackStack()
         }
         binding.selectButton.setOnClickListener {
+            industryViewModel.saveIndustry()
             findNavController().popBackStack()
         }
     }
