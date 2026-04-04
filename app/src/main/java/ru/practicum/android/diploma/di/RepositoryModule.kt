@@ -43,14 +43,6 @@ val repositoryModule = module {
         FavoriteRepositoryImpl(get())
     }
 
-    single<SearchRepository> {
-        SearchRepositoryImpl(get(), get())
-    }
-
-    single<IndustryRepository> {
-        IndustryRepositoryImpl(get(), get())
-    }
-
     single<FiltersGettingRepository> {
         FiltersGettingRepositoryImpl(
             storageClient = get(),
@@ -75,4 +67,11 @@ val repositoryModule = module {
         FiltersDeletingRepositoryImpl(get())
     }
 
+    single<SearchRepository> {
+        SearchRepositoryImpl(get(), get())
+    }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(get(), get())
+    }
 }
