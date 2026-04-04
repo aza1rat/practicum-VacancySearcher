@@ -20,36 +20,50 @@ class FilterRegionViewmodel(private val filterRegionsInteractor: FilterRegionsIn
     private val saveLiveData = SingleLiveEvent<Boolean>()
     fun observeSaveLiveData(): LiveData<Boolean> = saveLiveData
 
+    private var allRegions: List<AreaRegion>? = null
+
     fun onSearchTextChanged(text: String) {
-        getRegions(text)
+        if (allRegions == null) {
+            getRegions()
+            return
+        }
+
+        if (text.isEmpty()) {
+            regionLiveData.postValue(FilterRegionState.Content(allRegions ?: emptyList()))
+        } else {
+            getRegionsOnText(text)
+        }
     }
 
-    fun getRegions(regionName: String? = null) {
+    fun getRegions() {
         viewModelScope.launch(Dispatchers.IO) {
             regionLiveData.postValue(FilterRegionState.Loading)
             filterRegionsInteractor.getAllRegions().collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        val allRegions = getRegionOnCountry(resource.data ?: emptyList())
-                        val filteredList = if (regionName.isNullOrBlank()) {
-                            allRegions
-                        } else {
-                            allRegions.filter { region ->
-                                region.name.contains(regionName.trim(), ignoreCase = true)
-                            }
-                        }
-                        regionLiveData.postValue(FilterRegionState.Content(filteredList))
+                        val regions = resource.data ?: emptyList()
+                        allRegions = getRegionOnCountry(regions)
+
+                        regionLiveData.postValue(FilterRegionState.Content(allRegions ?: emptyList()))
                     }
 
                     is Resource.Error -> {
-                        regionLiveData.postValue(FilterRegionState.Error(resource.message!!))
+                        regionLiveData.postValue(FilterRegionState.Error(resource.message ?: "Unknown Error"))
                     }
                 }
             }
         }
     }
 
-    suspend fun getRegionOnCountry(allRegions: List<AreaRegion>): List<AreaRegion> {
+    private fun getRegionsOnText(text: String) {
+        val filtered = allRegions?.filter { region ->
+            region.name.contains(text.trim(), ignoreCase = true)
+        } ?: emptyList()
+
+        regionLiveData.postValue(FilterRegionState.Content(filtered))
+    }
+
+    private suspend fun getRegionOnCountry(allRegions: List<AreaRegion>): List<AreaRegion> {
         val selectedCountry = filterRegionsInteractor.getCountry()
 
         return if (selectedCountry != null) {
@@ -64,6 +78,5 @@ class FilterRegionViewmodel(private val filterRegionsInteractor: FilterRegionsIn
             filterRegionsInteractor.saveRegion(region)
             saveLiveData.postValue(true)
         }
-
     }
 }
