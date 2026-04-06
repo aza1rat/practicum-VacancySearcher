@@ -94,7 +94,8 @@ class FilterIndustryFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, callback
+            viewLifecycleOwner,
+            callback
         )
     }
 
