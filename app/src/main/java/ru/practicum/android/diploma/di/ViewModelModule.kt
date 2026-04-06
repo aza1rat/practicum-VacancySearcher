@@ -30,7 +30,6 @@ val viewModelModule = module {
     viewModel {
         LocationViewModel(get(), get())
     }
-
     viewModel {
         FilterSettingsViewModel()
     }
