@@ -120,11 +120,13 @@ class FilterLocationFragment : Fragment() {
     }
 
     private fun navigateToCountry() {
+        locationViewModel.onNavigate(false)
         requireActivity().getNavController(R.id.containerView)
             .navigate(R.id.action_filterLocationFragment_to_filterCountryFragment)
     }
 
     private fun navigateToRegion() {
+        locationViewModel.onNavigate(true)
         requireActivity().getNavController(R.id.containerView)
             .navigate(R.id.action_filterLocationFragment_to_filterRegionFragment)
     }

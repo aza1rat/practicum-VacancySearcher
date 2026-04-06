@@ -19,6 +19,8 @@ class LocationViewModel(
 
     private var areaCountry: AreaCountry? = null
     private var areaRegion: AreaRegion? = null
+    private var previousRegion: AreaRegion? = null
+    private var navigatedFromRegion = false
 
     fun getFilters() {
         areaCountry = locationInteractor.getAreaCountry()
@@ -26,12 +28,25 @@ class LocationViewModel(
         if (areaRegion == null && areaCountry == null) {
             locationState.value = FilterLocationState.Empty
         } else {
-            if (areaCountry == null && areaRegion != null) {
-                areaCountry = AreaCountry(areaRegion!!.parentId, areaRegion!!.parentName)
-                locationInteractor.saveAreaCountry(areaCountry!!)
+            if (navigatedFromRegion) {
+                setCountryFromRegion()
             }
             locationState.value = FilterLocationState.Success(areaCountry?.name ?: "",
                 areaRegion?.name ?: "")
+        }
+    }
+
+    private fun setCountryFromRegion() {
+        if (areaCountry == null && areaRegion != null && previousRegion != areaRegion) {
+            areaCountry = AreaCountry(areaRegion!!.parentId, areaRegion!!.parentName)
+            locationInteractor.saveAreaCountry(areaCountry!!)
+        }
+    }
+
+    fun onNavigate(toRegion: Boolean) {
+        navigatedFromRegion = toRegion
+        if (toRegion) {
+            previousRegion = areaRegion
         }
     }
 
