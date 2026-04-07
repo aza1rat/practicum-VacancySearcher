@@ -123,11 +123,10 @@ class FilterSettingsFragment : Fragment() {
                 binding.expectedSalaryInput.setText(state.salary.toString())
                 binding.expectedSalaryClear.isVisible = true
             } else {
+                binding.expectedSalaryInput.text?.clear()
                 binding.expectedSalaryClear.isVisible = false
             }
-            if (state.isOnlyWithSalary == true) {
-                binding.hideWithoutSalaryCheckbox.isChecked = true
-            }
+            binding.hideWithoutSalaryCheckbox.isChecked = state.isOnlyWithSalary == true
         }
 
         binding.resetButton.setOnClickListener {
