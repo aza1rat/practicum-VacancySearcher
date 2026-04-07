@@ -52,14 +52,34 @@ class FiltersGettingRepositoryImpl(
         return storageClient.getData<Boolean>(SharedPrefsStorageClient.ONLY_WITH_SALARY_KEY)
     }
 
-    override fun getAllFilters(): Filters {
-        return Filters(
-            areaCountry = getCountry(),
-            areaRegion = getRegion(),
-            industry = getIndustry(),
-            salary = getSalary(),
-            isOnlyWithSalary = getIsOnlyWithSalary()
+    override fun getAllFilters(): Filters? {
+        var nullable = true
+        val areaCountry = getCountry()
+        val areaRegion = getRegion()
+        val industry = getIndustry()
+        val salary = getSalary()
+        val isOnlyWithSalary = getIsOnlyWithSalary()
+        val filterList = listOf(
+            areaCountry,
+            areaRegion,
+            industry,
+            salary,
+            isOnlyWithSalary
         )
+        filterList.forEach {
+            if (it != null) nullable = false
+        }
+        return if (nullable) {
+            null
+        } else {
+            Filters(
+                areaCountry = areaCountry,
+                areaRegion = areaRegion,
+                industry = industry,
+                salary = salary,
+                isOnlyWithSalary = isOnlyWithSalary
+            )
+        }
     }
 
 }
