@@ -4,6 +4,7 @@ import ru.practicum.android.diploma.feature.filter.domain.api.FilterSettingsInte
 import ru.practicum.android.diploma.feature.filter.domain.api.FiltersGettingRepository
 import ru.practicum.android.diploma.feature.filter.domain.api.FiltersSavingRepository
 import ru.practicum.android.diploma.feature.filter.domain.model.Filters
+
 class FilterSettingsInteractorImpl(
     private val repository: FiltersGettingRepository,
     private val filtersSavingRepository: FiltersSavingRepository
