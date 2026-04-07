@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
@@ -20,6 +21,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterSettingsBinding
 import ru.practicum.android.diploma.feature.filter.domain.impl.DeleteFilterByKeyUseCaseImpl.Companion.AREA_COUNTRY_KEY
 import ru.practicum.android.diploma.feature.filter.domain.impl.DeleteFilterByKeyUseCaseImpl.Companion.INDUSTRY_KEY
+import ru.practicum.android.diploma.feature.filter.domain.impl.DeleteFilterByKeyUseCaseImpl.Companion.SALARY_KEY
 import ru.practicum.android.diploma.feature.filter.presentation.FilterSettingsViewModel
 import kotlin.getValue
 
@@ -69,6 +71,24 @@ class FilterSettingsFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.expectedSalaryClear.setOnClickListener {
+            filterSettingsViewModel.deleteFilter(SALARY_KEY)
+            binding.expectedSalaryInput.text?.clear()
+        }
+
+        binding.expectedSalaryInput.doOnTextChanged { text, _, _, _ ->
+            val value = text?.toString()
+            if (value?.isEmpty() == true || value?.isBlank() == true) {
+                filterSettingsViewModel.deleteFilter(SALARY_KEY)
+                binding.expectedSalaryClear.isVisible = false
+            }
+            val salary = text.toString().toIntOrNull()
+            if (salary != null) {
+                filterSettingsViewModel.setSalary(salary)
+                binding.expectedSalaryClear.isVisible = true
+            }
+        }
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 isEnabled = true
@@ -108,6 +128,10 @@ class FilterSettingsFragment : Fragment() {
             if (state.isOnlyWithSalary == true) {
                 binding.hideWithoutSalaryCheckbox.isChecked = true
             }
+        }
+
+        binding.resetButton.setOnClickListener {
+            filterSettingsViewModel.clearFilters()
         }
 
     }
@@ -155,7 +179,6 @@ class FilterSettingsFragment : Fragment() {
                 textLayout.defaultHintTextColor =
                     ContextCompat.getColorStateList(requireActivity(), typedValue.resourceId)
                 actionButton.setImageResource(R.drawable.ic_close)
-
             }
         }
     }

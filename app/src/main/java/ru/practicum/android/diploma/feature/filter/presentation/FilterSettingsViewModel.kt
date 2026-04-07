@@ -37,4 +37,9 @@ class FilterSettingsViewModel(
         init()
     }
 
+    fun clearFilters() {
+        clearFiltersUseCase.execute()
+        init()
+    }
+
 }
