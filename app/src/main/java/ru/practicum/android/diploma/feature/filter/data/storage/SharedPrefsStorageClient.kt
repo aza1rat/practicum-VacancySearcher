@@ -10,7 +10,7 @@ class SharedPrefsStorageClient(private val sharedPreferences: SharedPreferences)
             when (data) {
                 is String -> putString(key, data)
                 is Int -> putInt(key, data)
-                is Boolean -> putBoolean(key, data)
+                is Boolean -> putString(key, data.toString())
                 else -> throw IllegalArgumentException("Unsupported data type")
             }
         }
@@ -53,8 +53,8 @@ class SharedPrefsStorageClient(private val sharedPreferences: SharedPreferences)
         return if (result == -1) null else result
     }
 
-    private fun tryGetBoolean(key: String): Boolean {
-        return sharedPreferences.getBoolean(key, false)
+    private fun tryGetBoolean(key: String): Boolean? {
+        return tryGetString(key)?.toBoolean()
     }
 
     companion object {
