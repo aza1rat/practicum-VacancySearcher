@@ -31,7 +31,7 @@ class FilterIndustryFragment : Fragment() {
         binding.industryRecyclerView.isVisible = false
         binding.placeholderText.text = errorText
         when (errorText) {
-            getString(R.string.server_error),getString(R.string.failed_to_load_regions) -> {
+            getString(R.string.server_error), getString(R.string.failed_to_load_regions) -> {
                 binding.placeholderImage.setImageResource(R.drawable.img_request_unsuccessful_magic_carpet)
             }
             else -> {
