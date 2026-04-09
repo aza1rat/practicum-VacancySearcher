@@ -28,7 +28,6 @@ import ru.practicum.android.diploma.util.ResourceProvider
 import ru.practicum.android.diploma.util.ResourceProviderImpl
 
 const val VACANCY_BASE_URL = "https://android-diploma.education-services.ru/"
-
 val dataModule = module {
 
     single<VacancyApiService> {
