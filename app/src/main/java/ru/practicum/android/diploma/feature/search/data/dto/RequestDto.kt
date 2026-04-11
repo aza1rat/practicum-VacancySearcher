@@ -17,4 +17,5 @@ sealed interface RequestDto {
         override val id: String
     ) : RequestDto, WithPathId
 
+    object Area : RequestDto
 }

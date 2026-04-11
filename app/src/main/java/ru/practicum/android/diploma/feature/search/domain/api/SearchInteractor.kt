@@ -11,4 +11,6 @@ interface SearchInteractor {
         filter: SearchFilters?,
         pager: Int
     ): Flow<Resource<VacancyListInfo>>
+
+    suspend fun getAllFilters(): SearchFilters?
 }
