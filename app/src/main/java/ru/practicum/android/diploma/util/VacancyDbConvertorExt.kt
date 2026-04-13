@@ -22,7 +22,7 @@ fun Vacancy.toDbEntity(): VacancyEntity {
     )
 }
 
-fun VacancyEntity.toVacancyDetail(): Vacancy {
+fun VacancyEntity.toVacancy(): Vacancy {
     return Vacancy(
         id,
         name,
