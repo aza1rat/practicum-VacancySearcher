@@ -1,9 +1,15 @@
 package ru.practicum.android.diploma.feature.vacancy.ui
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.style.MetricAffectingSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -13,7 +19,6 @@ import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyState
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
-import ru.practicum.android.diploma.util.ui.DescriptionFormatterVacancy
 import ru.practicum.android.diploma.util.ui.SalaryFormatter
 
 class VacancyFragment : Fragment() {
@@ -81,6 +86,7 @@ class VacancyFragment : Fragment() {
 
     private fun showContent(content: VacancyState.Content) {
         val vacancy = content.content
+        val headers = content.descriptionHeaders
         val isFavorite = content.isFavorite
         contentVacancy = vacancy
         with(binding) {
@@ -91,14 +97,14 @@ class VacancyFragment : Fragment() {
             vacancyLayout.visibility = View.VISIBLE
             serverError.visibility = View.GONE
             noInternetPlaceHolder.visibility = View.GONE
-            setupMainInfo(vacancy)
+            setupMainInfo(vacancy, headers)
             setIsFavorite(isFavorite)
             setupSkills(vacancy.skills)
             ContactsFormatter(binding, vacancyViewModel, requireContext()).setupContacts(vacancy)
         }
     }
 
-    private fun setupMainInfo(vacancy: Vacancy) {
+    private fun setupMainInfo(vacancy: Vacancy, headers: List<IntRange>?) {
         with(binding) {
             vacancyName.text = vacancy.name.replace(Regex("\\s+в\\s+\\S+$"), "")
             vacancySalary.text = SalaryFormatter(vacancy.salary, requireContext()).format()
@@ -115,7 +121,19 @@ class VacancyFragment : Fragment() {
             val scheduleText = "${vacancy.employment?.name}, ${vacancy.schedule?.name}"
             employmentSchedule.text = scheduleText
             // нужна функция форматирования текста?
-            vacancyDescription.text = DescriptionFormatterVacancy(vacancy.description).format()
+            val descriptionSpannable = SpannableString(vacancy.description)
+            if (headers != null) {
+                val typeface = ResourcesCompat.getFont(requireContext(), R.font.ys_display_medium)
+                for (header in headers) {
+                    descriptionSpannable.setSpan(
+                        CustomTypefaceSpan(typeface!!),
+                        header.first,
+                        header.last,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+            vacancyDescription.text = descriptionSpannable
         }
     }
 
@@ -177,4 +195,14 @@ class VacancyFragment : Fragment() {
             binding.addToFavorites.setImageResource(R.drawable.ic_favorites_off)
         }
     }
+
+    class CustomTypefaceSpan(private val typeface: Typeface) : MetricAffectingSpan() {
+        override fun updateDrawState(ds: TextPaint) {
+            ds.typeface = typeface
+        }
+        override fun updateMeasureState(ms: TextPaint) {
+            ms.typeface = typeface
+        }
+    }
+
 }

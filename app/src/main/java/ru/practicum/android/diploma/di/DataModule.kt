@@ -23,6 +23,8 @@ import ru.practicum.android.diploma.feature.search.data.network.RetrofitNetworkC
 import ru.practicum.android.diploma.feature.search.data.network.VacancyApiService
 import ru.practicum.android.diploma.feature.search.data.pagination.Pagination
 import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
+import ru.practicum.android.diploma.feature.vacancy.data.HeaderSearcher
+import ru.practicum.android.diploma.feature.vacancy.data.headersearch.HeaderSearcherImpl
 import ru.practicum.android.diploma.feature.vacancy.data.navigator.ExternalNavigatorImpl
 import ru.practicum.android.diploma.util.AuthInterceptor
 import ru.practicum.android.diploma.util.ConnectionChecker
@@ -96,5 +98,9 @@ val dataModule = module {
 
     factory<Paginator> {
         Pagination(PAGE_START_INDEX)
+    }
+
+    single<HeaderSearcher> {
+        HeaderSearcherImpl()
     }
 }

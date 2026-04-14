@@ -8,18 +8,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteInteractor
+import ru.practicum.android.diploma.feature.vacancy.domain.api.SearchDescriptionHeadersUseCase
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.Resource
+import kotlin.ranges.IntRange
 
 class VacancyViewModel(
     private val vacancyInteractor: VacancyInteractor,
-    private val favoriteInteractor: FavoriteInteractor
+    private val favoriteInteractor: FavoriteInteractor,
+    private val searchDescriptionHeadersUseCase: SearchDescriptionHeadersUseCase
 ) : ViewModel() {
 
     private val _vacancyDetail = MutableLiveData<VacancyState>()
     fun observeVacancyDetail(): LiveData<VacancyState> = _vacancyDetail
     private var isFavorite = false
+    private var headers: List<IntRange>? = null
 
     fun getVacancyDetail(id: String) {
         _vacancyDetail.postValue(VacancyState.Loading)
@@ -31,7 +35,11 @@ class VacancyViewModel(
             vacancyInteractor.getVacancyDetail(id).collect {
                 when (it) {
                     is Resource.Error -> _vacancyDetail.postValue(VacancyState.Error(it.message!!))
-                    is Resource.Success -> _vacancyDetail.postValue(VacancyState.Content(it.data!!, isFavorite))
+                    is Resource.Success -> _vacancyDetail.postValue(VacancyState.Content(
+                        it.data!!,
+                        isFavorite,
+                        getHeadersFromDescription(it.data.description!!)
+                    ))
                 }
             }
 
@@ -47,10 +55,21 @@ class VacancyViewModel(
             }
             vacancy?.apply {
                 isFavorite = true
-                _vacancyDetail.postValue(VacancyState.Content(this, isFavorite))
+                _vacancyDetail.postValue(VacancyState.Content(this,
+                    isFavorite,
+                    getHeadersFromDescription(this.description!!)))
             } ?: run {
                 _vacancyDetail.postValue(VacancyState.Error(DATABASE_ERROR))
             }
+        }
+    }
+
+    fun getHeadersFromDescription(description: String): List<IntRange>? {
+        if (headers != null) {
+            return headers
+        } else {
+            headers = searchDescriptionHeadersUseCase.execute(description)
+            return headers
         }
     }
 
@@ -82,7 +101,11 @@ class VacancyViewModel(
                 }
                 isFavorite = favoriteInteractor.isFavorite(vacancy.id)
             }
-            _vacancyDetail.postValue(VacancyState.Content(vacancy, isFavorite))
+            _vacancyDetail.postValue(VacancyState.Content(
+                vacancy,
+                isFavorite,
+                getHeadersFromDescription(vacancy.description!!)
+            ))
         }
     }
 

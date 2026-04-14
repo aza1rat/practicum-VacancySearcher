@@ -5,6 +5,8 @@ import ru.practicum.android.diploma.feature.filter.domain.api.ClearFiltersUseCas
 import ru.practicum.android.diploma.feature.filter.domain.api.DeleteFilterByKeyUseCase
 import ru.practicum.android.diploma.feature.filter.domain.impl.ClearFiltersUseCaseImpl
 import ru.practicum.android.diploma.feature.filter.domain.impl.DeleteFilterByKeyUseCaseImpl
+import ru.practicum.android.diploma.feature.vacancy.domain.api.SearchDescriptionHeadersUseCase
+import ru.practicum.android.diploma.feature.vacancy.domain.impl.SearchDescriptionHeadersUseCaseImpl
 
 val useCaseModule = module {
     single<DeleteFilterByKeyUseCase> {
@@ -12,5 +14,8 @@ val useCaseModule = module {
     }
     single<ClearFiltersUseCase> {
         ClearFiltersUseCaseImpl(get())
+    }
+    single<SearchDescriptionHeadersUseCase> {
+        SearchDescriptionHeadersUseCaseImpl(get())
     }
 }

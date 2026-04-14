@@ -23,8 +23,10 @@ import ru.practicum.android.diploma.feature.search.data.impl.PaginationRepositor
 import ru.practicum.android.diploma.feature.search.data.impl.SearchRepositoryImpl
 import ru.practicum.android.diploma.feature.search.domain.api.PaginationRepository
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
+import ru.practicum.android.diploma.feature.vacancy.data.impl.HeaderSearchRepositoryImpl
 import ru.practicum.android.diploma.feature.vacancy.data.impl.VacancyDetailMapper
 import ru.practicum.android.diploma.feature.vacancy.data.impl.VacancyRepositoryImpl
+import ru.practicum.android.diploma.feature.vacancy.domain.api.HeaderSearchRepository
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyRepository
 
 val repositoryModule = module {
@@ -85,5 +87,9 @@ val repositoryModule = module {
 
     factory<PaginationRepository> {
         PaginationRepositoryImpl(get())
+    }
+
+    single<HeaderSearchRepository> {
+        HeaderSearchRepositoryImpl(get())
     }
 }
