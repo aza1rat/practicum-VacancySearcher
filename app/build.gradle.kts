@@ -97,4 +97,6 @@ dependencies {
 
     // Serialization Json
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+
+    implementation("com.mohamedrejeb.ksoup:ksoup-html:0.6.0")
 }
