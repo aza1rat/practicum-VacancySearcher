@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteInteractor
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyFormattedDescription
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyViewModel(
@@ -20,6 +21,7 @@ class VacancyViewModel(
     private val _vacancyDetail = MutableLiveData<VacancyState>()
     fun observeVacancyDetail(): LiveData<VacancyState> = _vacancyDetail
     private var isFavorite = false
+    private var formattedDescription: VacancyFormattedDescription? = null
 
     fun getVacancyDetail(id: String) {
         _vacancyDetail.postValue(VacancyState.Loading)
@@ -31,7 +33,13 @@ class VacancyViewModel(
             vacancyInteractor.getVacancyDetail(id).collect {
                 when (it) {
                     is Resource.Error -> _vacancyDetail.postValue(VacancyState.Error(it.message!!))
-                    is Resource.Success -> _vacancyDetail.postValue(VacancyState.Content(it.data!!, isFavorite))
+                    is Resource.Success -> _vacancyDetail.postValue(
+                        VacancyState.Content(
+                            it.data!!,
+                            getFormattedDescription(it.data.description),
+                            isFavorite
+                        )
+                    )
                 }
             }
 
@@ -47,7 +55,13 @@ class VacancyViewModel(
             }
             vacancy?.apply {
                 isFavorite = true
-                _vacancyDetail.postValue(VacancyState.Content(this, isFavorite))
+                _vacancyDetail.postValue(
+                    VacancyState.Content(
+                        this,
+                        getFormattedDescription(description),
+                        isFavorite
+                    )
+                )
             } ?: run {
                 _vacancyDetail.postValue(VacancyState.Error(DATABASE_ERROR))
             }
@@ -82,7 +96,22 @@ class VacancyViewModel(
                 }
                 isFavorite = favoriteInteractor.isFavorite(vacancy.id)
             }
-            _vacancyDetail.postValue(VacancyState.Content(vacancy, isFavorite))
+            _vacancyDetail.postValue(VacancyState.Content(
+                vacancy,
+                getFormattedDescription(vacancy.description),
+                isFavorite
+            ))
+        }
+    }
+
+    private fun getFormattedDescription(description: String?): VacancyFormattedDescription? {
+        if (formattedDescription != null) {
+            return formattedDescription
+        } else {
+            formattedDescription = description?.let {
+                vacancyInteractor.getVacancyFormattedDescription(it)
+            }
+            return formattedDescription
         }
     }
 
