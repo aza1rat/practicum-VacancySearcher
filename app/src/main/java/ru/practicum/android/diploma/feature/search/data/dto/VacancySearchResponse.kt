@@ -7,5 +7,5 @@ class VacancySearchResponse(
     val pages: Int,
     val page: Int,
     @SerializedName("items")
-    val vacancies: List<VacancyDto>
+    val vacancies: List<VacancyPreviewDto>
 ) : Response()

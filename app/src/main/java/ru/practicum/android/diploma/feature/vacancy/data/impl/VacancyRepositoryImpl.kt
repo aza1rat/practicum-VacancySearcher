@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.dto.RequestDto
-import ru.practicum.android.diploma.feature.search.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
 import ru.practicum.android.diploma.feature.vacancy.data.description.VacancyDescriptionParser
+import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyRepository
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyFormattedDescription
