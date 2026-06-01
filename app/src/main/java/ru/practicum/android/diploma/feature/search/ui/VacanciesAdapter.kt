@@ -21,7 +21,7 @@ class VacanciesAdapter(
      */
     fun submitList(newList: List<Vacancy>) {
         val diff = DiffUtil.calculateDiff(VacancyDiffCallback(vacancies, newList))
-        vacancies = newList
+        vacancies = newList.toList()
         diff.dispatchUpdatesTo(this)
     }
 
