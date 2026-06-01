@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.feature.vacancy.data.impl
 
-import ru.practicum.android.diploma.feature.search.data.dto.AreaDto
-import ru.practicum.android.diploma.feature.search.data.dto.VacancyDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.AreaDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Address
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Area
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Contacts
