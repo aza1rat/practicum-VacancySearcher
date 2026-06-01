@@ -1,15 +1,15 @@
 package ru.practicum.android.diploma.feature.search.data.impl
 
-import ru.practicum.android.diploma.feature.search.data.dto.AddressDto
-import ru.practicum.android.diploma.feature.search.data.dto.AreaDto
-import ru.practicum.android.diploma.feature.search.data.dto.ContactsDto
-import ru.practicum.android.diploma.feature.search.data.dto.EmployerDto
-import ru.practicum.android.diploma.feature.search.data.dto.EmploymentDto
-import ru.practicum.android.diploma.feature.search.data.dto.ExperienceDto
-import ru.practicum.android.diploma.feature.search.data.dto.IndustryDto
-import ru.practicum.android.diploma.feature.search.data.dto.SalaryDto
-import ru.practicum.android.diploma.feature.search.data.dto.ScheduleDto
-import ru.practicum.android.diploma.feature.search.data.dto.VacancyDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.AddressDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.AreaDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.ContactsDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.EmployerDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.EmploymentDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.ExperienceDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.IndustryDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.SalaryDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.ScheduleDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Address
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Area
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Contacts

@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.db.data.dao.VacancyDao
 import ru.practicum.android.diploma.feature.favorite.domain.api.FavoriteRepository
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
 import ru.practicum.android.diploma.util.toDbEntity
-import ru.practicum.android.diploma.util.toVacancyDetail
+import ru.practicum.android.diploma.util.toVacancy
 
 class FavoriteRepositoryImpl(private val vacancyDao: VacancyDao) : FavoriteRepository {
     override suspend fun addToFavorite(vacancy: Vacancy) {
@@ -19,10 +19,10 @@ class FavoriteRepositoryImpl(private val vacancyDao: VacancyDao) : FavoriteRepos
 
     override fun getFavorites(offset: Int, limit: Int): Flow<List<Vacancy>> =
         vacancyDao.getAllByPage(offset, limit)
-            .map { list -> list.map { it.toVacancyDetail() } }
+            .map { list -> list.map { it.toVacancy() } }
 
     override suspend fun getVacancyById(id: String): Vacancy? {
-        return vacancyDao.getById(id)?.toVacancyDetail()
+        return vacancyDao.getById(id)?.toVacancy()
     }
 
     override suspend fun isFavorite(id: String): Boolean {

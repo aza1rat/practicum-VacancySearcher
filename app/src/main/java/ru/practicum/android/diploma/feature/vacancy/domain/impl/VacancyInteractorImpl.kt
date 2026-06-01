@@ -4,11 +4,16 @@ import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyRepository
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyFormattedDescription
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyInteractorImpl(private val vacancyRepository: VacancyRepository) : VacancyInteractor {
     override fun getVacancyDetail(id: String): Flow<Resource<Vacancy?>> {
         return vacancyRepository.getVacancyDetail(id)
+    }
+
+    override fun getVacancyFormattedDescription(description: String): VacancyFormattedDescription {
+        return vacancyRepository.getVacancyFormattedDescription(description)
     }
 
     override fun sendVacancyViaMessenger(url: String) {

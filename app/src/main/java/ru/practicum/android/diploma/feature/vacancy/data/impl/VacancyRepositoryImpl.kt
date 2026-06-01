@@ -4,16 +4,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.dto.RequestDto
-import ru.practicum.android.diploma.feature.search.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.data.ExternalNavigator
+import ru.practicum.android.diploma.feature.vacancy.data.description.VacancyDescriptionParser
+import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.vacancy.domain.api.VacancyRepository
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyFormattedDescription
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient,
     private val vacancyDetailMapper: VacancyDetailMapper,
-    private val externalNavigator: ExternalNavigator
+    private val externalNavigator: ExternalNavigator,
+    private val vacancyDescriptionParser: VacancyDescriptionParser
 ) : VacancyRepository {
     override fun getVacancyDetail(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.doRequest(RequestDto.Vacancy(id))
@@ -27,6 +30,10 @@ class VacancyRepositoryImpl(
 
             else -> emit(Resource.Error("Ошибка сервера"))
         }
+    }
+
+    override fun getVacancyFormattedDescription(description: String): VacancyFormattedDescription {
+        return vacancyDescriptionParser.parse(description)
     }
 
     override fun sendVacancyViaMessenger(url: String) {

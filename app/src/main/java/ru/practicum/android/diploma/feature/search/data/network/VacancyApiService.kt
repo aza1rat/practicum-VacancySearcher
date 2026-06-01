@@ -4,9 +4,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.feature.filter.data.dao.RegionDto
-import ru.practicum.android.diploma.feature.search.data.dto.AreaDto
-import ru.practicum.android.diploma.feature.search.data.dto.VacancyDto
 import ru.practicum.android.diploma.feature.search.data.dto.VacancySearchResponse
+import ru.practicum.android.diploma.feature.vacancy.data.dto.AreaDto
+import ru.practicum.android.diploma.feature.vacancy.data.dto.VacancyDto
 
 interface VacancyApiService {
     @GET("vacancies")

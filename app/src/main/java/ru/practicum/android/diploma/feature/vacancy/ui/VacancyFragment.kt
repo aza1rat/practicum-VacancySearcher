@@ -1,9 +1,11 @@
 package ru.practicum.android.diploma.feature.vacancy.ui
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -11,10 +13,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.vacancy.domain.model.Vacancy
+import ru.practicum.android.diploma.feature.vacancy.domain.model.VacancyFormattedDescription
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyState
 import ru.practicum.android.diploma.feature.vacancy.presentation.VacancyViewModel
-import ru.practicum.android.diploma.util.ui.DescriptionFormatterVacancy
 import ru.practicum.android.diploma.util.ui.SalaryFormatter
+import ru.practicum.android.diploma.util.ui.VacancyFormatter
 
 class VacancyFragment : Fragment() {
 
@@ -24,6 +27,7 @@ class VacancyFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var contentVacancy: Vacancy? = null
+    private val vacancyFormatter = VacancyFormatter()
 
     private val args by navArgs<VacancyFragmentArgs>()
 
@@ -81,6 +85,7 @@ class VacancyFragment : Fragment() {
 
     private fun showContent(content: VacancyState.Content) {
         val vacancy = content.content
+        val descriptionFormatted = content.formattedDescription
         val isFavorite = content.isFavorite
         contentVacancy = vacancy
         with(binding) {
@@ -91,14 +96,14 @@ class VacancyFragment : Fragment() {
             vacancyLayout.visibility = View.VISIBLE
             serverError.visibility = View.GONE
             noInternetPlaceHolder.visibility = View.GONE
-            setupMainInfo(vacancy)
+            setupMainInfo(vacancy, descriptionFormatted)
             setIsFavorite(isFavorite)
             setupSkills(vacancy.skills)
             ContactsFormatter(binding, vacancyViewModel, requireContext()).setupContacts(vacancy)
         }
     }
 
-    private fun setupMainInfo(vacancy: Vacancy) {
+    private fun setupMainInfo(vacancy: Vacancy, descriptionFormatted: VacancyFormattedDescription?) {
         with(binding) {
             vacancyName.text = vacancy.name.replace(Regex("\\s+в\\s+\\S+$"), "")
             vacancySalary.text = SalaryFormatter(vacancy.salary, requireContext()).format()
@@ -114,8 +119,9 @@ class VacancyFragment : Fragment() {
             requiredExperience.text = vacancy.experience?.name
             val scheduleText = "${vacancy.employment?.name}, ${vacancy.schedule?.name}"
             employmentSchedule.text = scheduleText
-            // нужна функция форматирования текста?
-            vacancyDescription.text = DescriptionFormatterVacancy(vacancy.description).format()
+            descriptionFormatted?.let {
+                vacancyDescription.text = vacancyFormatter.formatDescription(it, getHeaderFont())
+            }
         }
     }
 
@@ -124,7 +130,7 @@ class VacancyFragment : Fragment() {
             binding.skillsGroup.visibility = View.GONE
         } else {
             binding.skillsGroup.visibility = View.VISIBLE
-            binding.vacancySkills.text = skills.joinToString("\n") { " • $it" }
+            binding.vacancySkills.text = vacancyFormatter.formatSkills(skills)
         }
     }
 
@@ -176,5 +182,9 @@ class VacancyFragment : Fragment() {
         } else {
             binding.addToFavorites.setImageResource(R.drawable.ic_favorites_off)
         }
+    }
+
+    private fun getHeaderFont(): Typeface {
+        return ResourcesCompat.getFont(requireContext(), R.font.ys_display_medium)!!
     }
 }
